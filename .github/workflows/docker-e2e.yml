@@ -1,0 +1,142 @@
+name: Docker Build & E2E Smoke Test
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'Dockerfile'
+      - 'docker/**'
+      - 'docker-compose.yml'
+      - '.env.template'
+      - 'bin/**'
+      - 'application/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.npmrc'
+      - '.github/workflows/docker-e2e.yml'
+
+  pull_request:
+    branches:
+      - 'main'
+    paths:
+      - 'Dockerfile'
+      - 'docker/**'
+      - 'docker-compose.yml'
+      - '.env.template'
+      - 'bin/**'
+      - 'application/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - '.npmrc'
+      - '.github/workflows/docker-e2e.yml'
+
+jobs:
+  docker-smoke-test:
+    name: Build Docker & Test REST API
+    runs-on: arc-runner-set
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Prepare environment configuration
+        run: |
+          cp .env.template .env
+          sed -i 's/ESPOCRM_API_KEY=.*/ESPOCRM_API_KEY=ci_test_secret_api_key_12345/' .env
+          sed -i 's/ESPOCRM_ADMIN_PASSWORD=.*/ESPOCRM_ADMIN_PASSWORD=ci_test_admin_pass/' .env
+
+      - name: Build Docker image
+        run: docker compose build
+
+      - name: Start Docker Compose stack
+        run: docker compose up -d
+
+      - name: Wait for EspoCRM healthy status
+        run: |
+          echo "Waiting for EspoCRM container to be healthy (up to 120s)..."
+          for i in $(seq 1 24); do
+            STATUS=$(docker inspect --format='{{json .State.Health.Status}}' fluia-espocrm 2>/dev/null || echo '"starting"')
+            echo "Attempt $i: Container health status is $STATUS"
+            if [ "$STATUS" = '"healthy"' ]; then
+              echo "EspoCRM is healthy!"
+              break
+            fi
+            if [ $i -eq 24 ]; then
+              echo "Timeout waiting for healthy status. Container logs:"
+              docker compose logs app
+              docker compose logs db
+              exit 1
+            fi
+            sleep 5
+          done
+
+      - name: Verify Web UI HTTP 200
+        run: |
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/)
+          echo "Web UI HTTP status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "Web UI failed to respond with HTTP 200!"
+            docker compose logs app
+            exit 1
+          fi
+
+      - name: Verify REST API Authentication with X-Api-Key
+        run: |
+          API_KEY="ci_test_secret_api_key_12345"
+          RESPONSE=$(curl -s -w "\n%{http_code}" -H "X-Api-Key: $API_KEY" http://localhost:8080/api/v1/App/user)
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          echo "App/user HTTP Code: $HTTP_CODE"
+          echo "App/user Body: $BODY"
+
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "REST API authentication failed!"
+            docker compose logs app
+            exit 1
+          fi
+
+      - name: Test REST API CRUD (Create & Query Lead)
+        run: |
+          API_KEY="ci_test_secret_api_key_12345"
+          # Create Lead
+          CREATE_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            -H "X-Api-Key: $API_KEY" \
+            -H "Content-Type: application/json" \
+            -d '{"firstName":"CI","lastName":"Lead Test","status":"New"}' \
+            http://localhost:8080/api/v1/Lead)
+          CREATE_CODE=$(echo "$CREATE_RESPONSE" | tail -n1)
+          CREATE_BODY=$(echo "$CREATE_RESPONSE" | sed '$d')
+          echo "Create Lead HTTP Code: $CREATE_CODE"
+          echo "Create Lead Body: $CREATE_BODY"
+
+          if [ "$CREATE_CODE" != "200" ]; then
+            echo "Failed to create Lead via REST API!"
+            docker compose logs app
+            exit 1
+          fi
+
+          # Query Lead
+          QUERY_RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -H "X-Api-Key: $API_KEY" \
+            http://localhost:8080/api/v1/Lead)
+          QUERY_CODE=$(echo "$QUERY_RESPONSE" | tail -n1)
+          QUERY_BODY=$(echo "$QUERY_RESPONSE" | sed '$d')
+          echo "Query Lead HTTP Code: $QUERY_CODE"
+          echo "Query Lead Body: $QUERY_BODY"
+
+          if [ "$QUERY_CODE" != "200" ]; then
+            echo "Failed to query Leads via REST API!"
+            docker compose logs app
+            exit 1
+          fi
+
+      - name: Teardown Compose stack
+        if: always()
+        run: docker compose down -v
+
+      - name: Dump logs on failure
+        if: failure()
+        run: docker compose logs
