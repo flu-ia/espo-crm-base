@@ -1,99 +1,85 @@
-## EspoCRM
+# EspoCRM (Fluia Fork)
 
-[![PHPStan level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](#espocrm)
+> [!IMPORTANT]
+> **Internal Fork Notice**: This repository is a customized internal fork of [EspoCRM](https://github.com/espocrm/espocrm) tailored specifically for the **Fluia** ecosystem.
+> 
+> - **No Third-Party Support**: This repository is maintained solely for internal needs. We do not provide public support, warranty, issue triage, or maintenance for external users.
+> - **No Upstream Contributions**: We do not actively submit upstream contributions or accept external pull requests. If you are looking for the official community CRM, please visit [espocrm.com](https://www.espocrm.com) or the [EspoCRM upstream repository](https://github.com/espocrm/espocrm).
 
-[EspoCRM](https://www.espocrm.com) is a free, open-source CRM platform designed to help organizations build and maintain strong customer relationships.
-It provides a wide range of tools to store, organize, and manage leads, contacts, sales opportunities, marketing campaigns,
-support cases, and more – all business information in a simple and intuitive interface.
+---
 
-![Screenshot](https://github.com/user-attachments/assets/d0806394-3691-43a1-83a5-16ad2e7314e2)
+## License & Open Source Compliance
 
+This project is licensed under the **GNU Affero General Public License v3.0 (GNU AGPLv3)** in full compliance with EspoCRM's original licensing terms.
 
-### Architecture
+* Original Copyright © Yuriy Kuznetsov, Taras Machyshyn, Oleksiy Avramenko.
+* In accordance with AGPLv3 Section 5 and Section 13, the source code and modifications remain open and publicly available.
+* For complete license terms, refer to the [LICENSE.txt](LICENSE.txt) file.
 
-EspoCRM is a web application with a frontend designed as a single-page application and a REST API
-backend written in PHP.
+---
 
-### Demo
+## Modifications in this Fork
 
-You can try the CRM on an online [demo](https://www.espocrm.com/demo/).
+This fork adapts EspoCRM into a streamlined, high-performance customer data backend for Fluia by eliminating unused features, optimizing the container footprint, and simplifying the user navigation.
 
-### Requirements
+### 1. Docker & Runtime Architecture
+- **Slim Single-Container Stack**: Lightweight Alpine Linux-based Docker image bundling PHP 8.3 (FPM) and Nginx orchestrated by Supervisord (~150MB image).
+- **OPcache & Healthchecks**: Configured non-blocking curl healthchecks and adjusted OPcache settings to avoid CLI/FPM preload runner panics.
+- **Dedicated Cron Worker**: Uses the same lightweight base image to execute scheduled jobs (`php cron.php`) reliably without external package pulls.
 
-* PHP 8.3 - 8.5;
-* MySQL 8.0 (and later), or MariaDB 10.3 (and later);
-* PostgreSQL 15 (and later).
+### 2. Disabled Modules & Scopes
+Unused features have been completely disabled at the metadata/scope level (`"disabled": true`), stripping them from the ORM, REST API, navigation, and relations:
+- **Marketing**:
+  - `Campaign` (Campañas)
+  - `MassEmail` (Correos masivos)
+  - `TargetList` & `TargetListCategory` (Listas de objetivos)
+- **Support & Helpdesk**:
+  - `Case` (Casos)
+  - `KnowledgeBaseArticle` & `KnowledgeBaseCategory` (Base de conocimiento)
+- **Templates & Scheduling**:
+  - `EmailTemplate` & `EmailTemplateCategory` (Plantillas de correo)
+  - `WorkingTimeCalendar` (Calendarios de jornada laboral)
+- **Communication & Activities**:
+  - Streamlined defaults removing unneeded default tabs (Meetings, Calls, in-app Email client).
+- **Administration Panel Synchronization**:
+  - Cleaned up `app/adminPanel` metadata to remove obsolete entries (`Email Templates` under Messaging and `Working Time Calendars` under Setup), preventing broken routes and UI desynchronization.
 
-For more information about server configuration, see [this article](https://docs.espocrm.com/administration/server-configuration/).
+### 3. Sidebar Navigation Refactor
+- **Direct Access (No Hidden Overflow)**: Removed the three-dots overflow delimiter (`_delimiter_` in `tabList`), allowing all primary navigation items to remain directly accessible on the main sidebar.
+- **New Section Divider**: Added a dedicated `Tools` / `Herramientas` section divider (`$Tools`) in the navigation bar.
+- **Grouped Utilities**: Placed `Template` (Document templates) and `Import` directly under the new `Tools` section.
+- **Multi-language Support**: Added i18n label definitions for `Tools` / `Herramientas` in `en_US`, `es_ES`, and `es_MX`.
 
-### Download
+---
 
-[Download](https://www.espocrm.com/download/) the latest release from our website or from GitHub [releases](https://github.com/espocrm/espocrm/releases).
+## Getting Started
 
-### Release notes
+### Prerequisites
+- Docker & Docker Compose v2+
 
-Release notes are available at GitHub [releases](https://github.com/espocrm/espocrm/releases).
+### Running the Stack
+1. Clone the repository and configure environment variables in `docker-compose.yml` (or `.env`):
+   ```bash
+   docker compose up -d --build
+   ```
+2. Access the CRM:
+   - Web interface: `http://localhost:8080`
+   - Database: MariaDB on port `3306`
 
-### Documentation
+### Maintenance Commands
+- Rebuild metadata and application cache inside container:
+  ```bash
+  docker compose exec espocrm php rebuild.php
+  ```
+- Clear application cache:
+  ```bash
+  docker compose exec espocrm php clear_cache.php
+  ```
 
-See the [documentation](https://docs.espocrm.com) for administrators, users and developers.
+---
 
-### Why EspoCRM?
-
-* Open-source transparency. EspoCRM's source code is open and accessible, so anyone can inspect it and see how data is being managed within the CRM.
-* Customization freedom. You can develop features, create custom entities, fields, relationships, buttons to make the system fit your specific needs. EspoCRM is more than a CRM – it's a platform for building custom business applications.
-* Clean user interface. EspoCRM offers an uncluttered, minimalist, and fast user interface, which is easy to navigate and has a short learning curve.
-* Straightforward REST API. It can be easily integrated with other applications using a REST API.
-
-### Who is EspoCRM for?
-
-* From startups, small & medium-sized businesses to larger organizations. A flexible, fully customizable solution that scales with your needs.
-* Developers & tech enthusiasts. You can extend functionalities, build extensions, and create custom integrations.
-* Anyone seeking a free or on-premise CRM.
-
-### Installing stable version
-
-See installation instructions:
-
-* [Manual installation](https://docs.espocrm.com/administration/installation/)
-* [Installation by script](https://docs.espocrm.com/administration/installation-by-script/)
-* [Installation with Docker](https://docs.espocrm.com/administration/docker/installation/)
-* [Installation with Traefik](https://docs.espocrm.com/administration/docker/traefik/)
-
-### Bug reporting
-
-Create a [GitHub issue](https://github.com/espocrm/espocrm/issues/new/choose) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
-
-### Development
-
-See the [developer documentation](https://docs.espocrm.com/development/).
-
-We highly recommend using an IDE for development. The backend codebase adheres to SOLID principles, utilizes interfaces, static typing and generics. We recommend to start learning EspoCRM from the Dependency Injection article in the documentation.
-
-Metadata plays an integral role in the EspoCRM application. All possible parameters are described with a JSON Schema, meaning you will have autocompletion in the IDE. You can also find the full metadata reference in the documentation.
-
-The frontend is an SPA built on a custom framework. It utilizes nested views and service DI, with the core partially written in TypeScript. Developers primarily work with existing form and field view implementations.
-
-### Community & Support
-
-If you have a question regarding some features, need help or customizations, want to get in touch with other EspoCRM users, or add a feature request, please use our [community forum](https://forum.espocrm.com/). We believe that using the forum to ask for help and share experience allows everyone in the community to contribute and use this knowledge later.
-
-### License
-
-EspoCRM is an open-source project licensed under [GNU AGPLv3](https://raw.githubusercontent.com/espocrm/espocrm/master/LICENSE.txt).
-
-### Contributing
-
-Before we can merge your pull request, you need to accept our CLA [here](https://github.com/espocrm/cla). See the [contributing guidelines](https://github.com/espocrm/espocrm/blob/master/.github/CONTRIBUTING.md).
-
-Branches:
-
-* *fix* – upcoming maintenance release; minor fixes should be pushed to this branch;
-* *master* – develop branch; new features should be pushed to this branch;
-* *stable* – last stable release.
-
-### Language
-
-If you want to improve existing translation or add a language that is not available yet, you can contribute on our [POEditor](https://poeditor.com/join/project/gLDKZtUF4i) project. See instructions [here](https://www.espocrm.com/blog/how-to-use-poeditor-to-translate-espocrm/). It may be reasonable to let us know about your intention to join the POEditor project by posting on our forum or via the contact form on our website.
-
-Changes on POEditor are usually merged to the GitHub repository before minor releases.
+## Upstream Links
+- Official Website: [https://www.espocrm.com](https://www.espocrm.com)
+- Upstream Source: [https://github.com/espocrm/espocrm](https://github.com/espocrm/espocrm)
+- Documentation: [https://docs.espocrm.com](https://docs.espocrm.com)
+- Forum: [https://forum.espocrm.com](https://forum.espocrm.com)
