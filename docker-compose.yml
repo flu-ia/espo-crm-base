@@ -1,20 +1,12 @@
-# Local test stack for the fluia EspoCRM image: app (builds ./Dockerfile) + MariaDB.
-# HTTP only, no TLS. First boot: open http://localhost:8080 and run the web installer.
-#
-#   docker compose up -d --build
-#   docker compose logs -f app
-#   curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/
-#   docker compose down        # keep data   |   docker compose down -v  # wipe all
-
 services:
   db:
     image: mariadb:11
     container_name: fluia-espocrm-db
     environment:
-      MARIADB_ROOT_PASSWORD: root_password
-      MARIADB_DATABASE: espocrm
-      MARIADB_USER: espocrm
-      MARIADB_PASSWORD: espocrm_password
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-root_password}
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-espocrm}
+      MARIADB_USER: ${MARIADB_USER:-espocrm}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-espocrm_password}
     volumes:
       - fluia-espocrm-db:/var/lib/mysql
     restart: unless-stopped
@@ -31,19 +23,14 @@ services:
       dockerfile: Dockerfile
     image: fluia/espocrm:slim
     container_name: fluia-espocrm
-    environment:
-      # Used by entrypoint.sh to wait for the DB. Install itself is via web UI.
-      ESPOCRM_DATABASE_HOST: db
-      ESPOCRM_DATABASE_PORT: 3306
-      # Set to "true" to run `php rebuild.php` on every container start
-      # (handy after mounting custom/ changes).
-      REBUILD_ON_BOOT: "false"
+    env_file:
+      - .env
     volumes:
       - fluia-espocrm-data:/var/www/html/data
       - fluia-espocrm-custom:/var/www/html/custom
       - fluia-espocrm-client-custom:/var/www/html/client/custom
     ports:
-      - "8080:80"
+      - "${APP_PORT:-8080}:80"
     restart: unless-stopped
     depends_on:
       db:
@@ -55,13 +42,14 @@ services:
       timeout: 10s
       retries: 3
 
-  # Job runner (cron). Needed for scheduled jobs / webhooks. Optional for UI tests.
   cron:
     build:
       context: .
       dockerfile: Dockerfile
     image: fluia/espocrm:slim
     container_name: fluia-espocrm-cron
+    env_file:
+      - .env
     volumes:
       - fluia-espocrm-data:/var/www/html/data
       - fluia-espocrm-custom:/var/www/html/custom
