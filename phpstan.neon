@@ -1,0 +1,15 @@
+parameters:
+	level: 8
+	inferPrivatePropertyTypeFromConstructor: true
+	treatPhpDocTypesAsCertain: false
+	paths:
+		- application
+	reportUnmatchedIgnoredErrors: false
+	excludePaths:
+		analyse:
+			- custom/Espo/Modules/*/vendor/*
+services:
+	-
+		class: EspoDev\PHPStan\Extensions\EntityManagerReturnType
+		tags:
+			- phpstan.broker.dynamicMethodReturnTypeExtension

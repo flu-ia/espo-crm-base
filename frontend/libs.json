@@ -1,0 +1,264 @@
+[
+    {
+        "src": "node_modules/jquery/dist/jquery.js",
+        "bundle": true,
+        "amdId": "jquery"
+    },
+    {
+        "src": "node_modules/underscore/underscore-umd.js",
+        "bundle": true,
+        "amdId": "underscore"
+    },
+    {
+        "src": "node_modules/backbone/backbone.js",
+        "bundle": true,
+        "amdId": "backbone"
+    },
+    {
+        "src": "node_modules/handlebars/dist/handlebars.js",
+        "bundle": true,
+        "amdId": "handlebars"
+    },
+    {
+        "src": "node_modules/bullbone/dist/bullbone.umd.js",
+        "bundle": true,
+        "amdId": "bullbone"
+    },
+    {
+        "src": "node_modules/js-base64/base64.js",
+        "bundle": true,
+        "amdId": "js-base64",
+        "suppressAmd": true
+    },
+    {
+        "src": "node_modules/moment/moment.js",
+        "bundle": true,
+        "amdId": "moment",
+        "suppressAmd": true
+    },
+    {
+        "src": "node_modules/moment-timezone/moment-timezone.js",
+        "bundle": true,
+        "amdId": "moment-timezone",
+        "suppressAmd": true
+    },
+    {
+        "src": "node_modules/moment-timezone-data-build/build/moment-timezone-data.js",
+        "bundle": true
+    },
+    {
+        "src": "node_modules/timepicker/jquery.timepicker.js",
+        "bundle": true,
+        "amdId": "timepicker",
+        "suppressAmd": true
+    },
+    {
+        "src": "node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js",
+        "bundle": true,
+        "amdId": "autocomplete",
+        "suppressAmd": true
+    },
+    {
+        "src": "node_modules/bootstrap/dist/js/bootstrap-for-espo.js",
+        "bundle": true
+    },
+    {
+        "src": "node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
+        "bundle": true,
+        "amdId": "bootstrap-datepicker",
+        "suppressAmd": true
+    },
+    {
+        "src": "node_modules/marked/lib/marked.umd.js",
+        "bundle": true,
+        "amdId": "marked"
+    },
+    {
+        "src": "node_modules/dompurify/dist/purify.js",
+        "bundle": true,
+        "amdId": "dompurify"
+    },
+    {
+        "src": "node_modules/autobahn-espo/autobahn.js",
+        "bundle": true
+    },
+    {
+        "src": "node_modules/jquery-ui-espo/dist/jquery-ui.js",
+        "bundle": true,
+        "suppressAmd": true,
+        "amdId": "jquery-ui"
+    },
+    {
+        "src": "node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.js",
+        "bundle": true
+    },
+    {
+        "name": "gridstack",
+        "src": "node_modules/gridstack/dist/gridstack-jq.js",
+        "bundle": true,
+        "amdId": "gridstack"
+    },
+    {
+        "src": "node_modules/selectize/dist/js/standalone/selectize.js",
+        "bundle": true,
+        "amdId": "selectize",
+        "suppressAmd": true
+    },
+    {
+        "src": "node_modules/autonumeric/dist/autoNumeric.js",
+        "bundle": true,
+        "amdId": "autonumeric"
+    },
+    {
+        "src": "node_modules/intl-tel-input/build/js/intlTelInput.js",
+        "bundle": true,
+        "amdId": "intl-tel-input",
+        "suppressAmd": true
+    },
+    {
+        "src": "node_modules/intl-tel-input/build/js/utils.js",
+        "bundle": true,
+        "amdId": "intl-tel-input-utils"
+    },
+    {
+        "bundle": true,
+        "amdId": "intl-tel-input-globals"
+    },
+    {
+        "src": "client/lib/original/shopify-draggable.js",
+        "bundle": true,
+        "amdId": "@shopify/draggable",
+        "name": "@shopify/draggable",
+        "prepareCommand": "npx rollup node_modules/@shopify/draggable/build/esm/index.mjs --format amd --file client/lib/original/shopify-draggable.js --amd.id @shopify/draggable"
+    },
+    {
+        "src": "client/lib/original/textcomplete-core.js",
+        "bundle": true,
+        "amdId": "@textcomplete/core",
+        "name": "@textcomplete/core",
+        "prepareCommand": "npx rollup node_modules/@textcomplete/core/dist/index.js --format amd --file client/lib/original/textcomplete-core.js --amd.id @textcomplete/core --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-commonjs"
+    },
+    {
+        "src": "client/lib/original/textcomplete-textarea.js",
+        "bundle": true,
+        "amdId": "@textcomplete/textarea",
+        "name": "@textcomplete/textarea",
+        "prepareCommand": "npx rollup node_modules/@textcomplete/textarea/dist/index.js --format amd --file client/lib/original/textcomplete-textarea.js --amd.id @textcomplete/textarea --plugin @rollup/plugin-node-resolve --plugin @rollup/plugin-commonjs --external @textcomplete/core"
+    },
+    {
+        "src": "node_modules/summernote/dist/summernote.js",
+        "amdId": "summernote",
+        "minify": true
+    },
+    {
+        "src": "node_modules/espo-funnel-chart/build/espo-funnel-chart.js",
+        "amdId": "espo-funnel-chart",
+        "minify": true
+    },
+    {
+        "src": "node_modules/flotr2/flotr2.js",
+        "amdId": "flotr2",
+        "minify": true
+    },
+    {
+        "src": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js",
+        "amdId": "bootstrap-colorpicker"
+    },
+    {
+        "src": "node_modules/cropper/dist/cropper.js",
+        "amdId": "cropper",
+        "minify": true
+    },
+    {
+        "src": "node_modules/cronstrue/dist/cronstrue-i18n.js",
+        "minify": true,
+        "amdId": "cronstrue"
+    },
+    {
+        "src": "node_modules/exif-js/exif.js",
+        "minify": true,
+        "amdId": "exif-js"
+    },
+    {
+        "src": "node_modules/jsbarcode/dist/JsBarcode.all.js",
+        "minify": true,
+        "amdId": "jsbarcode"
+    },
+    {
+        "src": "node_modules/qrcodejs/qrcode.js",
+        "amdId": "qrcodejs"
+    },
+    {
+        "src": "node_modules/turndown/lib/turndown.browser.umd.js",
+        "amdId": "turndown",
+        "minify": true
+    },
+    {
+        "name": "ace-builds",
+        "files": [
+            {
+                "src": "node_modules/ace-builds/src-noconflict/ace.js",
+                "dest": "client/lib/ace.js"
+            },
+            {
+                "src": "node_modules/ace-builds/src-noconflict/mode-javascript.js",
+                "dest": "client/lib/ace-mode-javascript.js"
+            },
+            {
+                "src": "node_modules/ace-builds/src-noconflict/mode-css.js",
+                "dest": "client/lib/ace-mode-css.js"
+            },
+            {
+                "src": "node_modules/ace-builds/src-noconflict/mode-html.js",
+                "dest": "client/lib/ace-mode-html.js"
+            },
+            {
+                "src": "node_modules/ace-builds/src-noconflict/mode-json.js",
+                "dest": "client/lib/ace-mode-json.js"
+            },
+            {
+                "src": "node_modules/ace-builds/src-noconflict/mode-handlebars.js",
+                "dest": "client/lib/ace-mode-handlebars.js"
+            },
+            {
+                "src": "node_modules/ace-builds/src-noconflict/ext-language_tools.js",
+                "dest": "client/lib/ace-ext-language_tools.js"
+            },
+            {
+                "src": "node_modules/ace-builds/src-noconflict/theme-tomorrow_night.js",
+                "dest": "client/lib/ace-theme-tomorrow_night.js"
+            }
+        ],
+        "amdId": "ace"
+    },
+    {
+        "src": "node_modules/fullcalendar/index.global.js",
+        "dest": "client/modules/crm/lib/fullcalendar.js",
+        "minify": true,
+        "amdId": "fullcalendar"
+    },
+    {
+        "src": "node_modules/@fullcalendar/moment/index.global.js",
+        "dest": "client/modules/crm/lib/fullcalendar-moment.js",
+        "minify": true,
+        "amdId": "@fullcalendar/moment"
+    },
+    {
+        "src": "node_modules/@fullcalendar/moment-timezone/index.global.js",
+        "dest": "client/modules/crm/lib/fullcalendar-moment-timezone.js",
+        "minify": true,
+        "amdId": "@fullcalendar/moment-timezone"
+    },
+    {
+        "src": "node_modules/vis-timeline/peer/umd/vis-timeline-graph2d.js",
+        "dest": "client/modules/crm/lib/vis-timeline.js",
+        "minify": true,
+        "amdId": "vis-timeline"
+    },
+    {
+        "src": "node_modules/vis-data/peer/umd/vis-data.js",
+        "dest": "client/modules/crm/lib/vis-data.js",
+        "minify": true,
+        "amdId": "vis-data"
+    }
+]

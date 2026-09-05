@@ -1,0 +1,104 @@
+// Modals
+
+.modal-open {
+  overflow: hidden;
+}
+
+.modal {
+  display: none;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: @zindex-modal;
+  -webkit-overflow-scrolling: touch;
+
+  // Prevent Chrome on Windows from adding a focus outline. For details, see
+  // https://github.com/twbs/bootstrap/pull/10951.
+  outline: 0;
+}
+.modal-open .modal {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+// Shell div to position the modal with bottom padding
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: var(--10px);
+}
+
+.modal-content {
+  position: relative;
+  background-color: var(--modal-content-bg);
+  background-clip: padding-box;
+  // Remove focus outline from opened modal
+  outline: 0;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: @zindex-modal-background;
+  background-color: var(--modal-backdrop-bg);
+
+    &.fade {
+        opacity: 0;
+    }
+    &.in {
+        opacity: @modal-backdrop-opacity;
+    }
+}
+
+.modal-header {
+  padding: var(--modal-title-padding);
+  border-bottom: var(--1px) solid var(--modal-header-border-color);
+  &:extend(.clearfix all);
+}
+// Close icon
+.modal-header .close {
+  margin-top: var(--minus-2px);
+}
+
+.modal-title {
+  margin: 0;
+  line-height: var(--modal-title-line-height);
+}
+
+.modal-body {
+  position: relative;
+  padding: var(--modal-inner-padding);
+}
+
+.modal-footer {
+  padding: var(--modal-inner-padding);
+  text-align: right; // right align buttons
+  border-top: var(--1px) solid var(--modal-header-border-color);
+  &:extend(.clearfix all); // clear it in case folks use .pull-* classes on buttons
+
+  .btn + .btn {
+    margin-left: var(--5px);
+    margin-bottom: 0; // account for input[type="submit"] which gets the bottom margin like all other inputs
+  }
+
+  .btn-group .btn + .btn {
+    margin-left: var(--minus-1px);
+  }
+
+  .btn-block + .btn-block {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: @screen-sm-min) {
+  .modal-dialog {
+    width: var(--600px);
+    margin: var(--30px) auto;
+  }
+}

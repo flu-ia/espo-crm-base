@@ -1,0 +1,11 @@
+[
+    "status",
+    "createdAt",
+    "executeTime",
+    "startedAt",
+    "executedAt",
+    "queue",
+    "group",
+    "className",
+    "pid"
+]

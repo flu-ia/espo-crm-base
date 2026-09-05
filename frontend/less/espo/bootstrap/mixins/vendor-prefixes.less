@@ -1,0 +1,35 @@
+
+// Animations
+.animation(@animation) {
+    animation: @animation;
+}
+
+.box-shadow(@shadow) {
+    box-shadow: @shadow;
+}
+
+.box-sizing(@boxmodel) {
+    box-sizing: @boxmodel;
+}
+
+.placeholder(@color: @input-color-placeholder) {
+    &::placeholder {
+        color: @color;
+    }
+}
+
+.transition(@transition) {
+    transition: @transition;
+}
+.transition-property(@transition-property) {
+    transition-property: @transition-property;
+}
+.transition-delay(@transition-delay) {
+    transition-delay: @transition-delay;
+}
+.transition-duration(@transition-duration) {
+    transition-duration: @transition-duration;
+}
+.transition-timing-function(@timing-function) {
+    transition-timing-function: @timing-function;
+}

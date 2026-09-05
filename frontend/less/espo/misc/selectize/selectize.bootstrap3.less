@@ -1,0 +1,148 @@
+/**
+ * selectize.css (v0.13.3)
+ * Copyright (c) 2013–2015 Brian Reavis & contributors
+ * Copyright (c) 2020 Selectize Team & contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
+ * file except in compliance with the License. You may obtain a copy of the License at:
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ *
+ * @author Brian Reavis <brian@thirdroute.com>
+ * @author Ris Adams <selectize@risadams.com>
+ */
+
+@import "selectize";
+
+@selectize-font-family: inherit;
+@selectize-font-size: inherit;
+@selectize-line-height: var(--line-height-computed);
+
+
+@selectize-color-highlight: rgba(255,237,40,0.4);
+@selectize-color-input: var(--input-bg);
+@selectize-color-input-full: var(--input-bg);
+@selectize-color-input-error: @state-danger-text;
+
+@selectize-color-input-error-focus: var(--state-success-text-10);
+@selectize-color-disabled: var(--input-bg);
+
+@selectize-color-item-border: rgba(0,0,0,0);
+@selectize-color-item-active-border: rgba(0,0,0,0);
+@selectize-color-optgroup: var(--dropdown-bg);
+@selectize-color-optgroup-text: var(--gray-light);
+@selectize-color-optgroup-border: var(--dropdown-divider-bg);
+@selectize-color-dropdown: var(--dropdown-bg);
+@selectize-color-dropdown-border-top: var(--input-border);
+@selectize-color-dropdown-item-active: var(--dropdown-link-hover-bg);
+@selectize-color-dropdown-item-active-text: var(--dropdown-link-hover-color);
+@selectize-color-dropdown-item-create-active-text: var(--dropdown-link-hover-color);
+@selectize-opacity-disabled: 0.5;
+@selectize-shadow-input: none;
+@selectize-shadow-input-focus: inset 0 1px 2px rgba(0,0,0,0.15);
+@selectize-shadow-input-error: inset 0 1px 1px rgba(0, 0, 0, .075);
+
+@selectize-border: var(--1px) solid var(--input-border);
+
+@selectize-width-item-border: 0;
+@selectize-padding-x: var(--padding-base-horizontal);
+@selectize-padding-y: var(--padding-base-vertical);
+@selectize-padding-dropdown-item-x: var(--padding-base-horizontal);
+@selectize-padding-dropdown-item-y: var(--3px);
+@selectize-padding-item-x: var(--3px);
+@selectize-padding-item-y: var(--1px);
+@selectize-margin-item-x: var(--3px);
+@selectize-margin-item-y: var(--3px);
+@selectize-caret-margin: 0;
+
+@selectize-arrow-size: var(--5px);
+@selectize-arrow-color: @selectize-color-text;
+@selectize-arrow-offset: calc(var(--padding-base-horizontal) + var(--5px));
+
+.selectize-dropdown, .selectize-dropdown.form-control {
+	height: auto;
+	padding: 0;
+	margin: var(--2px) 0 0 0;
+	z-index: @zindex-dropdown;
+	background: @selectize-color-dropdown;
+	border: var(--1px) solid var(--dropdown-border);
+	.selectize-box-shadow(0 6px 12px rgba(0,0,0,.175));
+}
+
+.selectize-dropdown {
+	.optgroup-header {
+		line-height: var(--line-height-base);
+	}
+	.optgroup:first-child:before {
+		display: none;
+	}
+	.optgroup:before {
+		content: ' ';
+		display: block;
+		.nav-divider();
+		margin-left: calc(0rem - var(--padding-base-horizontal));
+		margin-right: calc(0rem - var(--padding-base-horizontal));
+	}
+}
+
+.selectize-dropdown-content {
+	padding: var(--5px) 0;
+
+	.create {
+		padding: 0 var(--8px);
+	}
+}
+
+.selectize-dropdown-header {
+	padding: calc(var(--3px) * 2 * var(--padding-base-horizontal));
+}
+
+.selectize-input {
+	min-height: var(--input-height-base);
+
+	&.dropdown-active::before {
+		display: none;
+	}
+	&.focus {
+        // @todo Use variable together with inputs.
+		.selectize-box-shadow(~"inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px var(--input-border-focus-rgba)");
+	}
+}
+
+.has-error .selectize-input {
+    border-color: @selectize-color-input-error;
+    .selectize-box-shadow(@selectize-shadow-input-error);
+
+    &:focus {
+        border-color: @selectize-color-input-error-focus;
+    }
+}
+
+.selectize-control {
+	&.multi {
+		.selectize-input.has-items {
+			padding-left: calc(var(--padding-base-horizontal) - var(--3px));
+			padding-right: calc(var(--padding-base-horizontal) - var(--3px));
+		}
+	}
+}
+
+.form-control.selectize-control {
+	padding: 0;
+	height: auto;
+	border: none;
+	background: none;
+	.selectize-box-shadow(none);
+	.selectize-border-radius(0);
+}
+
+.selectize-control.plugin-drag_drop {
+	&.multi > .selectize-input > div.ui-sortable-placeholder {
+		background: transparent !important;
+		outline: var(--1px) solid var(--input-border-focus) !important;
+	}
+}

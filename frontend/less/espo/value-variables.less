@@ -1,0 +1,258 @@
+@main-gray-value: #e0e2e3;
+
+@white-color-value: #FEFEFE;
+
+@gray-base-value: #000;
+@gray-dark-value: lighten(@gray-base-value, 15%);
+@gray-value: lighten(@gray-base, 33.5%);
+@gray-light-value: lighten(@gray-base, 40%);
+@gray-lighter-value: lighten(@gray-base-value, 90%);
+
+@gray-soft-value: #777777;
+@gray-light-value: #969696;
+
+@body-bg-value: #f1f3f5;
+
+@text-color-value: @gray-dark-value;
+@text-white-color-value: @white-color-value;
+@text-muted-color-value: @gray-light-value;
+@text-gray-color-value: #6a6a6a;
+@text-solid-color-value: #535353;
+
+@brand-primary-value: #5589ca;
+@brand-danger-value: #d7657d;
+@brand-info-value: #9b86c9;
+@brand-success-value: #58c97a;
+@brand-warning-value: #e4a133;
+
+@brand-primary-text-value: #FFF;
+
+@state-primary-bg-value: #e5f3ff;
+@state-primary-text-value: #3993ca;
+@state-primary-border-value: darken(@state-primary-bg-value, 5%);
+
+@state-success-bg-value: lighten(spin(@brand-success-value, 5), 30%);
+@state-success-text-value: darken(spin(@brand-success-value, 7), 18%);
+@state-success-border-value: darken(@state-success-bg-value, 5%);
+
+@state-info-bg-value: #ece7f9;
+@state-info-text-value: #7f719e;
+@state-info-border-value: darken(@state-info-bg-value, 5%);
+
+@state-warning-bg-value: #faf4d6;
+@state-warning-text-value: #9f7122;
+@state-warning-border-value: darken(@state-warning-bg-value, 10%);
+
+@state-danger-text-value: #ad4846;
+@state-danger-bg-value: #f2dede;
+@state-danger-border-value: darken(@state-danger-bg-value, 10%);
+
+@state-default-text-value: @text-gray-color-value;
+@state-default-bg-value: #eaeaea;
+
+@warning-bg-value: #fffdf2;
+
+@default-box-shadow-value: 1px 2px 2px rgba(0, 0, 0, 0.05);
+
+@top-bar-box-shadow-value: 2px 2px 2px rgba(0, 0, 0, 0.09);
+
+@navbar-box-shadow-value: none;
+@navbar-border-width-value: var(--1px);
+
+@navbar-bg-value: @body-bg-value;
+@navbar-link-color-value: @gray-soft-value;
+@navbar-link-hover-color-value: @gray-value;
+@navbar-link-hover-bg-value: @body-bg-value; // @todo Remove ?
+@navbar-link-icon-color-value: @gray-dark-value;
+
+@navbar-inverse-color-value: @text-muted-color-value;
+@navbar-inverse-bg-value: @body-bg-value;
+@navbar-inverse-border-value: @default-border-color-value;
+@navbar-inverse-link-color-value: @text-color-value;
+@navbar-inverse-link-hover-color-value: @text-color-value;
+@navbar-inverse-link-hover-bg-value: #ececed;
+@navbar-inverse-link-disabled-color-value: #444;
+@navbar-inverse-link-disabled-bg-value: transparent;
+@navbar-inverse-link-active-bg-value: #dee1e7;
+@navbar-inverse-link-icon-color-value: @btn-text-color-value;
+@navbar-inverse-link-icon-hover-color-value: @navbar-inverse-link-icon-color-value;
+
+@navbar-link-icon-color-value: @text-gray-color-value;
+
+@input-border-value: #D1D5D6;
+@input-border-focus-value: #66afe9;
+@input-color-value: @text-color-value;
+@input-bg-value: @white-color-value;
+@input-bg-disabled-value: @gray-lighter-value;
+@input-color-disabled-value: @gray-light-value;
+@input-box-shadow-value: inset 0 var(--1px) var(--1px) rgb(0 0 0 / 4%);
+@input-border-width-value: var(--1px);
+
+@modal-backdrop-bg-value: fade(#DBDBDB, 50%);
+@modal-backdrop-filter-value: blur(1px);
+@modal-header-border-color-value: trasparent;
+@modal-header-bg-value: @body-bg-value;
+@modal-footer-bg-value: @body-bg-value;
+@modal-content-bg-value: @body-bg-value;
+@modal-box-shadow-value: 0 5px 15px rgb(0 0 0 / 50%);
+@modal-border-color-value: @panel-default-border-value;
+@modal-border-width-value: 0;
+
+@link-color-value: #245b8c;
+@link-hover-color-value: darken(@link-color-value, 10%);
+
+@link-record-color-value: #33373b;
+@link-record-hover-color-value: darken(@link-record-color-value, 5%);
+
+@text-link-color-value: #0f64b0;
+@text-link-hover-color-value: darken(@text-link-color-value, 15%);
+
+// Should be in with unit to work in CSS math functions.
+@panel-border-width-value: var(--1px);
+@panel-heading-height-value: var(--30px);
+@panel-heading-font-size-value: var(--15px);
+@vertical-gap-value: var(--16px);
+
+@panel-bg-value: #ffffff;
+
+@table-bg-value: @panel-bg-value;
+@table-bg-accent-value: #f9f9f9;
+
+@default-border-color-value: @main-gray-value;
+@default-heading-bg-color-value: #ecf4f8;
+
+@code-bg-value: #f9f9f9;
+@code-border-color-value: @default-border-color-value;
+@code-color-value: @gray-dark-value;
+
+@blockquote-border-color-value: @gray-lighter-value;
+
+@panel-default-text-value: @gray-dark-value;
+@panel-default-border-value: #e7eaed;
+@panel-default-bg-value: @panel-bg-value;
+
+@panel-primary-bg-value: darken(@state-primary-bg-value, 3%);
+@panel-primary-border-value: @panel-primary-bg-value;
+@panel-primary-text-value: @state-primary-text-value;
+
+@panel-danger-bg-value: @state-danger-bg-value;
+@panel-danger-border-value: @panel-danger-bg-value;
+@panel-danger-text-value: @state-danger-text-value;
+
+@panel-warning-bg-value: #f9eabb;
+@panel-warning-border-value: @panel-warning-bg-value;
+@panel-warning-text-value: @state-warning-text-value;
+
+@panel-success-bg-value: @state-success-bg-value;
+@panel-success-border-value: @panel-success-bg-value;
+@panel-success-text-value: @state-success-text-value;
+
+@panel-info-bg-value: @state-info-bg-value;
+@panel-info-border-value: @panel-info-bg-value;
+@panel-info-text-value: @state-info-text-value;
+
+@btn-default-bg-value: #fcfcfc;
+@btn-default-border-value: #c2cacc;
+@btn-default-color-value: #585858;
+@btn-default-hover-bg-value: darken(@btn-default-bg-value, 3%);
+@btn-default-hover-border-value: darken(@btn-default-border-value, 3%);
+@btn-default-active-bg-value: darken(@btn-default-bg-value, 8%);
+@btn-default-active-border-value: darken(@btn-default-border-value, 8%);
+
+@btn-primary-bg-value: @brand-primary-value;
+@btn-primary-border-value: @btn-primary-bg-value;
+@btn-primary-color-value: #fff;
+@btn-primary-hover-bg-value: darken(@btn-primary-bg-value, 10%);
+@btn-primary-active-bg-value: darken(@btn-primary-bg-value, 17%);
+@btn-primary-hover-border-value: @btn-primary-hover-bg-value;
+@btn-primary-active-border-value: darken(@btn-primary-bg-value, 20%);
+
+@btn-success-bg-value: @brand-success-value;
+@btn-success-border-value: @btn-success-bg-value;
+@btn-success-color-value: #fff;
+@btn-success-hover-bg-value: darken(@btn-success-bg-value, 10%);
+@btn-success-active-bg-value: darken(@btn-success-bg-value, 17%);
+@btn-success-hover-border-value: @btn-success-hover-bg-value;
+@btn-success-active-border-value: darken(@btn-success-bg-value, 20%);
+
+@btn-danger-bg-value: @brand-danger-value;
+@btn-danger-border-value: @btn-danger-bg-value;
+@btn-danger-color-value: #fff;
+@btn-danger-hover-bg-value: darken(@btn-danger-bg-value, 10%);
+@btn-danger-active-bg-value: darken(@btn-danger-bg-value, 17%);
+@btn-danger-hover-border-value: @btn-danger-hover-bg-value;
+@btn-danger-active-border-value: darken(@btn-danger-bg-value, 20%);
+
+@btn-warning-bg-value: @brand-warning-value;
+@btn-warning-border-value: @btn-warning-bg-value;
+@btn-warning-color-value: #fff;
+@btn-warning-hover-bg-value: darken(@btn-warning-bg-value, 10%);
+@btn-warning-active-bg-value: darken(@btn-warning-bg-value, 17%);
+@btn-warning-hover-border-value: @btn-warning-hover-bg-value;
+@btn-warning-active-border-value: darken(@btn-warning-bg-value, 20%);
+
+@btn-info-bg-value: @brand-info-value;
+@btn-info-border-value: @btn-info-bg-value;
+@btn-info-color-value: #fff;
+@btn-info-hover-bg-value: darken(@btn-info-bg-value, 10%);
+@btn-info-active-bg-value: darken(@btn-info-bg-value, 17%);
+@btn-info-hover-border-value: @btn-info-hover-bg-value;
+@btn-info-active-border-value: darken(@btn-info-bg-value, 20%);
+
+@btn-text-color-value: #5c5c5c;
+@btn-active-box-shadow-value: inset 0 3px 5px rgba(0, 0, 0, .125);
+
+@site-footer-bg-value: transparent;
+@site-footer-color-value: @gray-value;
+
+@popover-bg-value: @white-color-value;
+
+@dropdown-bg-value: @white-color-value;
+@dropdown-link-color-value: @gray-dark-value;
+@dropdown-link-hover-color-value: darken(@gray-dark-value, 5%);
+@dropdown-link-hover-bg-value: #f5f5f5;
+@dropdown-border-value: @default-border-color-value;
+@dropdown-border-width-value: var(--1px);
+@dropdown-divider-bg-value: #e5e5e5;
+@dropdown-box-shadow-value: 0 4px 6px rgba(0, 0, 0, 0.11);
+@dropdown-link-active-bg-value: @gray-lighter-value;
+
+@login-panel-heading-bg-value: @panel-bg-value;
+
+@gray-lighter-orange-mix-value: mix(orange, @gray-lighter-value, 50%);
+
+@calendar-today-bg-value: #fcf8e3;
+@calendar-border-value: #d1d5d6;
+@calendar-busy-bg-value: #d0beeb;
+
+@select-item-text-color-value: @text-color-value;
+@select-item-bg-value: #efefef;
+@select-item-active-text-color-value: @white-color-value;
+@select-item-active-bg-value: @brand-primary-value;
+@select-item-border-value: @gray-light-value;
+
+@label-color-value: #fff;
+@label-default-bg-value: @gray-light-value;
+
+@well-bg-value: @panel-bg-value;
+@well-border-value: @default-border-color-value;
+
+@scroll-bg-value: @gray-lighter-value;
+@scroll-thumb-bg-value: #c7c7c7;
+@scroll-border-width-value: 0;
+@scroll-width-value: 11px;
+
+@collapsed-modal-bg-value: @gray-soft-value;
+@collapsed-modal-text-color-value: @text-white-color-value;
+
+@btn-xs-wide-width-value: var(--65px);
+@btn-s-wide-width-value: var(--80px);
+@btn-wide-width-value: var(--100px);
+@btn-x-wide-width-value: var(--150px);
+@btn-xx-wide-width-value: var(--200px);
+
+@border-radius-value: var(--6px);
+@border-radius-small-value: var(--4px);
+@panel-border-radius-value: var(--8px);
+@dropdown-border-radius-value: var(--6px);
+@badge-border-radius-value: var(--10px);

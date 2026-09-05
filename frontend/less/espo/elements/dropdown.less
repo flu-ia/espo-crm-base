@@ -1,0 +1,379 @@
+
+.autocomplete-suggestions {
+    border: var(--dropdown-border-width) solid var(--dropdown-border);
+    background-color: var(--dropdown-bg);
+    color: var(--dropdown-link-color);
+    cursor: default;
+    overflow: auto;
+    padding: var(--5px) 0;
+    user-select: none;
+
+    min-width: calc(var(--50px) + var(--10px));
+
+    .autocomplete-suggestion.autocomplete-selected {
+        background-color: var(--dropdown-link-hover-bg) !important;
+        color: var(--dropdown-link-hover-color) !important;
+    }
+
+    strong {
+        font-weight: normal;
+        color: @brand-primary;
+    }
+
+    .autocomplete-suggestion {
+        padding: var(--4px) var(--10px);
+        white-space: nowrap;
+        overflow: hidden;
+
+        a {
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.popover,
+.dropdown-menu,
+.selectize-dropdown,
+.selectize-dropdown.form-control,
+.autocomplete-suggestions,
+.ui-timepicker-wrapper {
+    .dropdown-border();
+}
+
+// Separately intentionally as this one is not supported in FF.
+select.form-control::picker(select) {
+    .dropdown-border();
+}
+
+.popover {
+    background-color: var(--dropdown-bg);
+
+    &.bottom > .arrow {
+        border-bottom-color: var(--dropdown-border);
+    }
+    &.top > .arrow {
+        border-top-color: var(--dropdown-border);
+    }
+    &.left > .arrow {
+        border-left-color: var(--dropdown-border);
+    }
+    &.right > .arrow {
+        border-right-color: var(--dropdown-border);
+    }
+}
+
+.ui-timepicker-wrapper {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+ul.dropdown-menu > li.checkbox {
+    margin-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: var(--4px) 0 var(--4px) var(--14px);
+
+    .checkbox-text {
+        padding-left: var(--2px);
+    }
+
+    user-select: none;
+
+    label {
+        padding-left: var(--23px);
+
+        input[type="checkbox"].form-checkbox {
+            margin-left: calc(var(--23px) * -1);
+
+            &.form-checkbox-small {
+                margin-top: var(--3px);
+            }
+        }
+    }
+}
+
+ul.dropdown-menu {
+    > li > a {
+        padding-top: var(--4px);
+        padding-bottom: var(--4px);
+
+        -webkit-user-select: none;
+        -webkit-user-drag: none;
+        -moz-user-select: none;
+        user-select: none;
+        line-height: var(--line-height-computed);
+
+        &.active {
+            background-color: var(--dropdown-link-active-bg);
+            text-decoration: none;
+            outline: 0;
+        }
+
+        > .check-icon + div {
+            padding-right: var(--26px);
+        }
+
+        span.fa-check {
+            position: relative;
+            top: var(--1px);
+
+            + div {
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                vertical-align: top;
+                max-width: 100%;
+            }
+        }
+
+        &.disabled {
+            color: var(--text-muted-color);
+        }
+
+        &:not(:has(.check-icon)) {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        > div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    > li.checkbox:last-child {
+        margin-bottom: var(--3px);
+    }
+
+    > .dropdown-header {
+        user-select: none;
+    }
+}
+
+ul {
+    &.dropdown-menu-with-icons,
+    &:has(> li:not(.hidden) > a span.item-icon) {
+        > li {
+            &:not(:has(.item-icon-grid)) {
+                a {
+                    padding-left: var(--12px);
+                }
+
+                .fas,
+                .far,
+                .glyphicon,
+                .empty-icon {
+                    width: var(--16px);
+                    text-align: center;
+                    display: inline-block;
+                    color: var(--gray-soft);
+                }
+
+                .item-icon {
+                    font-size: var(--12px);
+                }
+
+                .item-text {
+                    padding-left: var(--10px);
+                    position: static;
+                }
+            }
+        }
+    }
+
+    &:has(> li:not(.hidden) > a span.item-icon) {
+        > li {
+            > a:not(:has(span.item-icon)):not(:has(span.item-icon)) {
+                padding-left: var(--28px);
+            }
+        }
+    }
+}
+
+ul.dropdown-menu {
+    > li {
+        a {
+            .item-icon + .item-text {
+                padding-left: var(--10px);
+            }
+        }
+    }
+
+    > li {
+        .item-icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(var(--34px), 1fr));
+
+            > a {
+                padding: var(--4px) var(--4px);
+                text-align: center;
+
+                &:hover {
+                    background-color: var(--dropdown-link-hover-bg);
+                }
+            }
+        }
+    }
+
+    > li {
+        > a {
+            &,
+            > div {
+                > .reaction-icon {
+                    font-size: var(--16px) !important;
+                }
+            }
+        }
+    }
+}
+
+.btn-group.open .dropdown-toggle {
+    &.btn-text {
+        box-shadow: none;
+    }
+}
+
+.btn.dropdown-toggle > span.caret.wide {
+    margin-left: var(--2px);
+    margin-right: var(--2px);
+}
+
+/*.fix-position {
+    .btn-group {
+        position: unset;
+    }
+}*/
+
+.dropdown-menu {
+    .quick-search-list-item {
+        input {
+            border-left: 0;
+            border-right: 0;
+            border-radius: 0;
+        }
+    }
+}
+
+@media screen and (max-width: @screen-xs-max) {
+    ul.dropdown-menu {
+        max-width: 100vw;
+    }
+}
+
+ul.dropdown-menu {
+    > li.divider:first-child {
+        display: none;
+    }
+
+    > li.divider:last-child {
+        display: none;
+    }
+
+    > li.divider + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden)  + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:not(.hidden) + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.hidden:first-child + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.divider {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+
+    > li.divider:has(+ li.hidden + li.hidden + li.hidden + li.hidden + li.hidden + li.hidden:last-child) {
+        display: none;
+    }
+}
+
+.textcomplete-dropdown {
+    .textcomplete-item {
+        > span {
+            display: block;
+            cursor: pointer;
+            padding: var(--4px) var(--20px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            img.avatar {
+                margin-right: var(--5px);
+            }
+        }
+
+        &:hover {
+            > span {
+                background-color: var(--dropdown-link-hover-bg);
+            }
+        }
+    }
+
+    &:not(:has(> li:hover)) {
+        .textcomplete-item {
+            &.active {
+                background-color: var(--gray-lighter);
+            }
+        }
+    }
+}

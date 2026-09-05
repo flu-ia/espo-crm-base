@@ -1,0 +1,87 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/client.json",
+    "title": "app/navbar",
+    "description": "Navbar definitions.",
+    "type": "object",
+    "properties": {
+        "items": {
+            "description": "Navbar item definitions.",
+            "type": "object",
+            "additionalProperties": {
+                "description": "An item.",
+                "type": "object",
+                "properties": {
+                    "view": {
+                        "type": "string",
+                        "description": "A view."
+                    },
+                    "class": {
+                        "type": "string",
+                        "description": "A CSS class."
+                    },
+                    "order": {
+                        "type": "integer",
+                        "description": "An order position."
+                    },
+                    "disabled": {
+                        "type": "boolean",
+                        "description": "To disable."
+                    },
+                    "accessDataList": {
+                        "$ref": "../clientDefs.json#/definitions/accessDataList"
+                    }
+                }
+            }
+        },
+        "menuItems": {
+            "description": "Menu item definitions.",
+            "type": "object",
+            "additionalProperties": {
+                "description": "An item.",
+                "type": "object",
+                "properties": {
+                    "labelTranslation": {
+                        "type": "string",
+                        "description": "A label translation path."
+                    },
+                    "link": {
+                        "type": "string",
+                        "description": "A link."
+                    },
+                    "order": {
+                        "type": "integer",
+                        "description": "An order position."
+                    },
+                    "groupIndex": {
+                        "type": "integer",
+                        "description": "A group index. Groups are separated by a divider."
+                    },
+                    "disabled": {
+                        "type": "boolean",
+                        "description": "An item will be hidden."
+                    },
+                    "handler": {
+                        "type": "string",
+                        "description": "A handler class."
+                    },
+                    "actionFunction": {
+                        "type": "string",
+                        "description": "An action function in the handler."
+                    },
+                    "configCheck": {
+                        "type": "string",
+                        "description": "A config path to check. Path items are separated by a dot. If a config value is not empty, then the action is allowed. The `!` prefix reverses the check."
+                    },
+                    "accessDataList": {
+                        "$ref": "../clientDefs.json#/definitions/accessDataList"
+                    },
+                    "iconClass": {
+                        "type": "string",
+                        "description": "An icon class. As of v10.0."
+                    }
+                }
+            }
+        }
+    }
+}

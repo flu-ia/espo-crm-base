@@ -1,0 +1,180 @@
+// Side navbar.
+
+// Side navbar. Also set in a CSS variable.
+@navbar-width: 232px;
+// Side navbar. Also set in a CSS variable.
+@navbar-minimized-width: 50px;
+// Also a defined in CSS variable.
+@container-max-width: 1440px;
+
+@gray-base: @gray-base-value;
+
+@white-color: var(--white-color);
+
+@body-bg: var(--body-bg);
+@panel-bg: var(--panel-bg);
+@main-gray: var(--main-gray);
+@gray-soft: var(--gray-soft);
+@gray-dark: var(--gray-dark);
+@gray-light: var(--gray-light);
+@gray-lighter: var(--gray-lighter);
+@gray: var(--gray);
+
+@brand-primary-10: var(--brand-primary-10);
+@brand-danger-10 : var(--brand-danger-10);
+@brand-info-10: var(--brand-info-10);
+@brand-success-10: var(--brand-success-10);
+@brand-warning-10: var(--brand-warning-10);
+
+@default-heading-bg-color: var(--default-heading-bg-color);
+
+@brand-primary: var(--brand-primary);
+@brand-danger: var(--brand-danger);
+@brand-info: var(--brand-info);
+@brand-success: var(--brand-success);
+@brand-warning: var(--brand-warning);
+
+@text-color: var(--text-color);
+@text-muted: var(--text-muted-color);
+
+@link-color: var(--link-color);
+@link-hover-color: var(--link-hover-color);
+
+@table-bg: var(--table-bg);
+
+@table-bg-hover: @default-heading-bg-color;
+@table-bg-active: @table-bg-hover;
+@table-bg-active-5: var(--main-gray-5);
+
+@list-group-active-text-color: var(--main-gray-lighten-40);
+
+@input-color: var(--input-color);
+@input-bg: var(--input-bg);
+@input-border: var(--input-border);
+@input-bg-disabled: var(--input-bg-disabled);
+
+@headings-line-height: 1;
+
+@font-family-base: var(--font-family);
+@font-family-monospace: var(--font-family-monospace);
+
+@icon-font-path: "../../fonts/";
+
+@modal-header-bg: var(--modal-header-bg);
+@modal-footer-bg: var(--modal-footer-bg);
+
+// @todo Move.
+.container-fixed() {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
+
+    .clearfix();
+}
+
+@state-success-bg: var(--state-success-bg);
+@state-success-text: var(--state-success-text);
+@state-success-border: var(--state-success-border);
+
+@state-danger-bg: var(--state-danger-bg);
+@state-danger-text: var(--state-danger-text);
+@state-danger-border: var(--state-danger-border);
+
+@state-warning-text: var(--state-warning-text);
+@state-warning-bg: var(--state-warning-bg);
+@state-warning-border: var(--state-warning-border);
+
+@state-info-text: var(--state-info-text);
+@state-info-bg: var(--state-info-bg);
+@state-info-border: var(--state-info-border);
+
+@state-info-bg-5: var(--state-info-bg-5);
+
+@state-success-bg-5: var(--state-success-bg-5);
+@state-success-bg-10: var(--state-success-bg-10);
+@state-success-text-10: var(--state-success-text-10);
+
+@panel-primary-border: var(--panel-primary-border);
+
+@navbar-inverse-color: var(--navbar-inverse-color);
+@navbar-inverse-bg: var(--navbar-inverse-bg);
+@navbar-inverse-link-active-bg: var(--navbar-inverse-link-active-bg);
+@navbar-inverse-border: var(--navbar-inverse-border);
+@navbar-inverse-link-color: var(--navbar-inverse-link-color);
+@navbar-inverse-toggle-hover-bg: var(--navbar-inverse-toggle-hover-bg);
+@navbar-inverse-link-hover-color: var(--navbar-inverse-link-hover-color);
+@navbar-inverse-link-hover-bg: var(--navbar-inverse-link-hover-bg);
+@navbar-inverse-link-active-color: @navbar-inverse-link-hover-color;
+@navbar-inverse-link-disabled-color: var(--navbar-inverse-link-disabled-color);
+@navbar-inverse-link-disabled-bg: var(--navbar-inverse-link-disabled-bg);
+
+@well-bg: var(--well-bg);
+@well-border: var(--well-border);
+
+@list-group-hover-bg: @default-heading-bg-color;
+@panel-footer-bg: var(--panel-bg);
+
+@panel-default-border: var(--panel-default-border);
+
+@panel-default-text: var(--panel-default-text);
+@panel-primary-text: var(--panel-primary-text);
+@panel-warning-text: var(--panel-warning-text);
+@panel-info-text: var(--panel-info-text);
+@panel-success-text: var(--panel-success-text);
+@panel-danger-text: var(--panel-danger-text);
+
+@panel-default-bg: var(--panel-default-bg);
+@panel-primary-bg: var(--panel-primary-bg);
+@panel-warning-bg: var(--panel-warning-bg);
+@panel-info-bg: var(--panel-info-bg);
+@panel-success-bg: var(--panel-success-bg);
+@panel-danger-bg: var(--panel-danger-bg);
+
+@panel-primary-border: @panel-primary-bg;
+@panel-warning-border: @panel-warning-bg;
+@panel-info-border: @panel-info-bg;
+@panel-success-border: @panel-success-bg;
+@panel-danger-border: @panel-danger-bg;
+
+@default-border-color: var(--default-border-color);
+
+@list-group-border: @default-border-color;
+@panel-inner-border: @default-border-color;
+
+@table-border-color: @default-border-color;
+
+@nav-tabs-border-color: @default-border-color;
+@nav-tabs-active-link-hover-border-color: @default-border-color;
+@nav-tabs-justified-link-border-color: @default-border-color;
+@pagination-border: @default-border-color;
+@list-group-border: @default-border-color;
+
+@list-group-active-bg: @table-bg-active;
+@list-group-active-border: @list-group-border;
+@list-group-active-color: @text-color;
+
+@zindex-popover: 1600;
+@zindex-tooltip: 2600;
+
+@login-panel-heading-bg: var(--login-panel-heading-bg);
+
+@login-logo-width: calc(var(--180px) + var(--1px));
+@login-logo-height: var(--43px);
+
+@navbar-inverse-toggle-border-color: transparent;
+
+@label-padding-small: 0.09em 0.5em 0.18em;
+
+@list-table-sm-screen-min-width: var(--500px);
+@navbar-panel-body-max-height: var(--600px);
+@notifications-panel-width: ~"min(var(--640px), 80vw)";
+@global-search-panel-width: ~"min(var(--640px), 80vw)";
+
+@popover-bg: var(--popover-bg);
+@popover-title-bg: var(--white-color);
+
+@selectize-color-text: var(--select-item-text-color);
+@selectize-color-item: var(--select-item-bg);
+@selectize-color-item-active: var(--select-item-active-bg);
+@selectize-color-item-active-text: var(--select-item-active-text-color);

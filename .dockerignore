@@ -1,0 +1,16 @@
+.git/
+.github/
+.idea/
+.vscode/
+node_modules/
+vendor/
+tests/
+data/logs/
+data/cache/
+data/upload/
+data/tmp/
+client/lib/
+client/css/espo/
+Dockerfile
+docker-compose.yml
+.dockerignore

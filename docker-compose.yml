@@ -1,0 +1,76 @@
+# Local test stack for the fluia EspoCRM image: app (builds ./Dockerfile) + MariaDB.
+# HTTP only, no TLS. First boot: open http://localhost:8080 and run the web installer.
+#
+#   docker compose up -d --build
+#   docker compose logs -f app
+#   curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8080/
+#   docker compose down        # keep data   |   docker compose down -v  # wipe all
+
+services:
+  db:
+    image: mariadb:11
+    container_name: fluia-espocrm-db
+    environment:
+      MARIADB_ROOT_PASSWORD: root_password
+      MARIADB_DATABASE: espocrm
+      MARIADB_USER: espocrm
+      MARIADB_PASSWORD: espocrm_password
+    volumes:
+      - fluia-espocrm-db:/var/lib/mysql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      start_period: 15s
+      timeout: 10s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fluia/espocrm:slim
+    container_name: fluia-espocrm
+    environment:
+      # Used by entrypoint.sh to wait for the DB. Install itself is via web UI.
+      ESPOCRM_DATABASE_HOST: db
+      ESPOCRM_DATABASE_PORT: 3306
+      # Set to "true" to run `php rebuild.php` on every container start
+      # (handy after mounting custom/ changes).
+      REBUILD_ON_BOOT: "false"
+    volumes:
+      - fluia-espocrm-data:/var/www/html/data
+      - fluia-espocrm-custom:/var/www/html/custom
+      - fluia-espocrm-client-custom:/var/www/html/client/custom
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      start_period: 60s
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  # Job runner (cron). Needed for scheduled jobs / webhooks. Optional for UI tests.
+  cron:
+    image: fluia/espocrm:slim
+    container_name: fluia-espocrm-cron
+    volumes:
+      - fluia-espocrm-data:/var/www/html/data
+      - fluia-espocrm-custom:/var/www/html/custom
+      - fluia-espocrm-client-custom:/var/www/html/client/custom
+    restart: unless-stopped
+    depends_on:
+      app:
+        condition: service_healthy
+    entrypoint: ["sh", "-c", "while true; do su www-data -s /bin/sh -c 'php cron.php' || true; sleep 60; done"]
+
+volumes:
+  fluia-espocrm-db:
+  fluia-espocrm-data:
+  fluia-espocrm-custom:
+  fluia-espocrm-client-custom:

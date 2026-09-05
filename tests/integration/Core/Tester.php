@@ -1,0 +1,642 @@
+<?php
+/************************************************************************
+ * This file is part of EspoCRM.
+ *
+ * EspoCRM – Open Source CRM application.
+ * Copyright (C) 2014-2026 EspoCRM, Inc.
+ * Website: https://www.espocrm.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU Affero General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU Affero General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
+
+namespace tests\integration\Core;
+
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Schema\SchemaException;
+use Doctrine\DBAL\Schema\Table;
+use Espo\Core\Authentication\Authentication;
+use Espo\Core\Authentication\AuthenticationData;
+use Espo\Core\Application;
+use Espo\Core\Binding\BindingProcessor;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\ServiceUnavailable;
+use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\DatabaseParamsFactory;
+use Espo\Core\Portal\Application as PortalApplication;
+use Espo\Core\Api\RequestWrapper;
+use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\ApplicationRunners\Rebuild;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Dbal\ConnectionFactoryFactory;
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\PasswordHash;
+use Espo\Entities\PortalRole;
+use Espo\Entities\Role;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Installer;
+use Psr\Http\Message\ServerRequestInterface as Psr7Request;
+use RuntimeException;
+use Slim\Psr7\Factory\RequestFactory;
+use Slim\Psr7\Response;
+
+class Tester
+{
+    private string $configPath = 'tests/integration/config.php';
+    private string $envConfigPath = 'tests/integration/config-env.php';
+
+    private string $buildPath = 'build';
+    private string $installPath = 'build/test';
+    private string $testDataPath = 'tests/integration/testData';
+    private string $packageJsonPath = 'package.json';
+
+    private ?Application $application = null;
+    private ?DataLoader $dataLoader = null;
+    private array $params;
+
+    private ?string $userName = null;
+    private ?string $password = null;
+
+    private ?string $portalId = null;
+    private ?string $authenticationMethod = null;
+    private string $defaultUserPassword = '1';
+
+    private ?RequestWrapper $request = null;
+
+    public function __construct(array $params)
+    {
+        $this->params = $this->normalizeParams($params);
+    }
+
+    private function normalizeParams(array $params): array
+    {
+        $namespaceToRemove = 'tests\\integration\\Espo';
+
+        $classPath = preg_replace(
+            '/^' . preg_quote($namespaceToRemove) . '\\\\(.+)Test$/',
+            '${1}',
+            $params['className']
+        );
+
+        $params['testDataPath'] = realpath($this->testDataPath);
+
+        if (isset($params['dataFile'])) {
+            $params['dataFile'] = realpath($this->testDataPath) . '/' . $params['dataFile'];
+
+            $dataFile = $params['dataFile'];
+
+            if (!file_exists($dataFile)) {
+                throw new RuntimeException("File '$dataFile' not found.");
+            }
+        } else {
+            $params['dataFile'] = realpath($this->testDataPath) . '/' . str_replace('\\', '/', $classPath) . '.php';
+        }
+
+        if (isset($params['pathToFiles'])) {
+            $params['pathToFiles'] = realpath($this->testDataPath) . '/' . $params['pathToFiles'];
+
+            $pathToFiles = $params['pathToFiles'];
+
+            if (!file_exists($pathToFiles)) {
+                throw new RuntimeException("File '$pathToFiles' not found.");
+            }
+        } else {
+            $params['pathToFiles'] = realpath($this->testDataPath) . '/' . str_replace('\\', '/', $classPath);
+        }
+
+        return $params;
+    }
+
+    private function getParam(string $name): mixed
+    {
+        if (isset($this->params[$name])) {
+            return $this->params[$name];
+        }
+
+        return null;
+    }
+
+    public function setParam(string $name, mixed $value): void
+    {
+        $this->params[$name] = $value;
+    }
+
+    protected function getTestConfigData(): array
+    {
+        $this->changeDirToBase();
+
+        if (file_exists($this->configPath)) {
+            $data = include($this->configPath);
+        } else if (getenv('TEST_DATABASE_NAME')) {
+            $data = include($this->envConfigPath);
+        } else {
+            throw new RuntimeException("Config `$this->configPath` not found. Create the config file.");
+        }
+
+        $packageData = json_decode(file_get_contents($this->packageJsonPath));
+
+        $version = $packageData->version;
+
+        $data['version'] = $version;
+
+        return $data;
+    }
+
+    private function setLastModifiedTime($time): void
+    {
+        $configData = $this->getTestConfigData();
+
+        if (array_key_exists('lastModifiedTime', $configData) && $configData['lastModifiedTime'] === $time) {
+            return;
+        }
+
+        $configData['lastModifiedTime'] = $time;
+
+        (new FileManager())->putPhpContents($this->configPath, $configData);
+    }
+
+    public function auth(
+        ?string $userName,
+        ?string $password = null,
+        ?string $portalId = null,
+        ?string $authenticationMethod = null,
+        ?RequestWrapper $request = null,
+    ): void {
+
+        $this->userName = $userName;
+        $this->password = $password;
+        $this->portalId = $portalId;
+        $this->authenticationMethod = $authenticationMethod;
+        $this->request = $request;
+    }
+
+    public function getApplication(
+        bool $reload = false,
+        bool $clearCache = true,
+        ?string $portalId = null,
+        ?BindingProcessor $binding = null,
+        bool $reuse = false,
+        bool $noUser = false,
+    ): Application {
+
+        if ($this->application && !$reload) {
+            return $this->application;
+        }
+
+        $portalId ??= $this->portalId ?? null;
+
+        $applicationParams = new Application\ApplicationParams(
+            noErrorHandler: true,
+            binding: $binding,
+            services: $this->prepareServices($reuse),
+        );
+
+        if ($clearCache) {
+            $this->clearCache();
+        }
+
+        if ($portalId) {
+            try {
+                $this->application = new PortalApplication($portalId, $applicationParams);
+            } catch (Forbidden|NotFound $e) {
+                throw new RuntimeException(previous: $e);
+            }
+        } else {
+            $this->application = new Application($applicationParams);
+        }
+
+        if (!$noUser) {
+            if (isset($this->userName) || $this->authenticationMethod) {
+                $this->login();
+            } else {
+                $this->application->setupSystemUser();
+            }
+        }
+
+        return $this->application;
+    }
+
+    private function getDataLoader(): DataLoader
+    {
+        if (!isset($this->dataLoader)) {
+            $this->dataLoader = new DataLoader($this->getApplication());
+        }
+
+        return $this->dataLoader;
+    }
+
+    private function changeDirToBase(): void
+    {
+        $installPath = str_replace('/', DIRECTORY_SEPARATOR, $this->installPath);
+
+        $baseDir = str_replace(DIRECTORY_SEPARATOR . $installPath, '', getcwd());
+
+        chdir($baseDir);
+        set_include_path($baseDir);
+    }
+
+    public function terminate(): void
+    {
+        $this->changeDirToBase();
+
+        if ($this->getParam('fullReset')) {
+            $this->setLastModifiedTime(null);
+        }
+    }
+
+    /**
+     * @throws Error
+     */
+    public function install(): void
+    {
+        $fileManager = new FileManager();
+
+        $configData = $this->getTestConfigData();
+
+        $latestEspoDir = Utils::getLatestBuiltPath($this->buildPath);
+
+        if (empty($latestEspoDir)) {
+            throw new RuntimeException("Espo build is not found. Run `grunt test`.");
+        }
+
+        if (!isset($configData['siteUrl']) && file_exists('data/config.php')) {
+            $mainConfigData = include('data/config.php');
+
+            if (isset($mainConfigData['siteUrl'])) {
+                $configData['siteUrl'] = $mainConfigData['siteUrl'] . '/' . $this->installPath;
+            }
+        }
+
+        if (isset($configData['siteUrl'])) {
+            $this->params['siteUrl'] = $configData['siteUrl'];
+        }
+
+        if (!file_exists($this->installPath)) {
+            $fileManager->mkdir($this->installPath);
+        }
+
+        if (!is_writable($this->installPath)) {
+            throw new RuntimeException("Dir '$this->installPath' is not writable. Check permissions.");
+        }
+
+        $this->reset($fileManager, $latestEspoDir);
+
+        Utils::fixUndefinedVariables();
+
+        chdir($this->installPath);
+        set_include_path($this->installPath);
+
+        if (!file_exists('bootstrap.php')) {
+            throw new RuntimeException("Could not read bootstrap.php.");
+        }
+
+        require_once('install/core/Installer.php');
+
+        $applicationParams = new Application\ApplicationParams(noErrorHandler: true);
+
+        $installer = new Installer($applicationParams);
+
+        $installer->saveData(array_merge($configData, [
+            'language' => 'en_US'
+        ]));
+
+        $installer->saveConfig($configData);
+
+        $app = new Application($applicationParams);
+
+        try {
+            $this->createDatabaseIfDoesNotExist($app);
+            $this->prepareDatabase($app);
+        } catch (Exception $e) {
+            throw new RuntimeException("DBAL error.", previous: $e);
+        }
+
+        $installer = new Installer($applicationParams); // reload installer to have all config data
+        $installer->rebuild();
+        $installer->setSuccess();
+
+        Registry::$isCleanAndReady = true;
+    }
+
+    // PDO can't be instantiated as dbname is set but database does not exist.
+
+    /**
+     * @throws Exception
+     */
+    private function createDatabaseIfDoesNotExist(Application $app): void
+    {
+        $injectableFactory = $app->getContainer()->getByClass(InjectableFactory::class);
+
+        $databaseHelper = $injectableFactory->create(DatabaseHelper::class);
+        $databaseParamsFactory = $injectableFactory->create(DatabaseParamsFactory::class);
+        $connectionFactoryFactory = $injectableFactory->create(ConnectionFactoryFactory::class);
+
+        $params = $databaseParamsFactory->create();
+
+        $dbname = $params->getName();
+
+        if (!$dbname) {
+            throw new RuntimeException('No "dbname" in database config.');
+        }
+
+        $params = $params->withName(null);
+
+        $pdo = $databaseHelper->createPDO($params);
+
+        $connection = $connectionFactoryFactory
+            ->create($params->getPlatform(), $pdo)
+            ->create($params);
+
+        $schemaManager = $connection->createSchemaManager();
+        $platform = $connection->getDatabasePlatform();
+
+        if (in_array($dbname, $schemaManager->listDatabases())) {
+            return;
+        }
+
+        $schemaManager->createDatabase($platform->quoteIdentifier($dbname));
+    }
+
+    /**
+     * @throws SchemaException
+     * @throws Exception
+     */
+    private function prepareDatabase(Application $app): void
+    {
+        if (Registry::$isCleanAndReady) {
+            return;
+        }
+
+        $databaseHelper = $app->getContainer()
+            ->getByClass(InjectableFactory::class)
+            ->create(DatabaseHelper::class);
+
+        $schemaManager = $databaseHelper->getDbalConnection()->createSchemaManager();
+        $platform = $databaseHelper->getDbalConnection()->getDatabasePlatform();
+
+        $pdo = $databaseHelper->getPDO();
+
+        $tables = $schemaManager->listTableNames();
+
+        foreach ($tables as $table) {
+            $sql = $platform->getDropTableSQL(new Table($table));
+
+            $pdo->query($sql);
+        }
+    }
+
+    private function reset(FileManager $fileManager, string $latestEspoDir): void
+    {
+        $configData = $this->getTestConfigData();
+
+        $fullReset = true;
+
+        if (file_exists($latestEspoDir . '/application')) {
+            $modifiedTime = filemtime($latestEspoDir . '/application');
+
+            if (
+                !$this->getParam('fullReset') &&
+                isset($configData['lastModifiedTime']) &&
+                $configData['lastModifiedTime'] == $modifiedTime
+            ) {
+                $fullReset = false;
+            }
+
+            $this->setLastModifiedTime($modifiedTime);
+        }
+
+        if ($fullReset) {
+            if ($this->isShellEnabled()) {
+                shell_exec('rm -rf "' . $this->installPath . '"');
+                shell_exec('cp -r "' . $latestEspoDir . '" "' . $this->installPath . '"');
+            } else {
+                $fileManager->removeInDir($this->installPath);
+                $fileManager->copy($latestEspoDir, $this->installPath, true);
+            }
+
+            return;
+        }
+
+        $fileManager->removeInDir($this->installPath . '/data');
+        $fileManager->removeInDir($this->installPath . '/custom/Espo/Custom');
+        $fileManager->removeInDir($this->installPath . '/client/custom');
+        $fileManager->unlink($this->installPath . '/install/config.php');
+    }
+
+    public function loadData(): void
+    {
+        $applyChanges = false;
+
+        if (!empty($this->params['pathToFiles']) && file_exists($this->params['pathToFiles'])) {
+            $this->getDataLoader()->loadFiles($this->params['pathToFiles']);
+
+            $this->getApplication(true)->run(Rebuild::class);
+        }
+
+        if (!empty($this->params['dataFile']) && file_exists($this->params['dataFile'])) {
+            $this->getDataLoader()->loadData($this->params['dataFile']);
+
+            $applyChanges = true;
+        }
+
+        if (!empty($this->params['initData'])) {
+            $this->getDataLoader()->setData($this->params['initData']);
+
+            $applyChanges = true;
+        }
+
+        if ($applyChanges) {
+            $this->getApplication(true)->run(Rebuild::class);
+        }
+    }
+
+    public function clearCache(): void
+    {
+        $this->clearVars();
+
+        (new FileManager())->removeInDir('data/cache');
+    }
+
+    private function clearVars(): void
+    {
+        $this->dataLoader = null;
+        $this->application = null;
+    }
+
+    /**
+     * Create a user with roles.
+     *
+     * @param string|array<string, mixed> $userData If string, then it's a userName with the default password.
+     */
+    public function createUser($userData, ?array $roleData = null, bool $isPortal = false): User
+    {
+        if (!is_array($userData)) {
+            $userData = [
+                'userName' => $userData,
+                'lastName' => $userData,
+            ];
+        }
+
+        if (!empty($roleData)) {
+            if (!isset($roleData['name'])) {
+                $roleData['name'] = $userData['userName'] . 'Role';
+            }
+
+            $role = $this->createRole($roleData, $isPortal);
+
+            $fieldName = $isPortal ? 'portalRolesIds' : 'rolesIds';
+
+            if (!isset($userData[$fieldName])) {
+                $userData[$fieldName] = [];
+            }
+
+            $userData[$fieldName][] = $role->getId();
+        }
+
+        $application = $this->getApplication();
+
+        $entityManager = $application->getContainer()->getByClass(EntityManager::class);
+        $config = $application->getContainer()->getByClass(Config::class);
+
+        if (!isset($userData['password'])) {
+            $userData['password'] = $this->defaultUserPassword;
+        }
+
+        $passwordHash = new PasswordHash($config);
+
+        $userData['password'] = $passwordHash->hash($userData['password']);
+
+        if ($isPortal) {
+            $userData['type'] = 'portal';
+        }
+
+        $user = $entityManager->getNewEntity(User::ENTITY_TYPE);
+        $user->setMultiple($userData);
+
+        $entityManager->saveEntity($user);
+
+        return $user;
+    }
+
+    private function createRole(array $roleData, bool $isPortal = false): Entity
+    {
+        $entityType = $isPortal ? PortalRole::ENTITY_TYPE : Role::ENTITY_TYPE;
+
+        if (isset($roleData['data']) && is_array($roleData['data'])) {
+            $roleData['data'] = json_encode($roleData['data']);
+        }
+
+        if (isset($roleData['fieldData']) && is_array($roleData['fieldData'])) {
+            $roleData['fieldData'] = json_encode($roleData['fieldData']);
+        }
+
+        $application = $this->getApplication();
+        $entityManager = $application->getContainer()->getByClass(EntityManager::class);
+
+        $role = $entityManager->getNewEntity($entityType);
+        $role->set($roleData);
+        $entityManager->saveEntity($role);
+
+        return $role;
+    }
+
+    public function normalizePath($path): string
+    {
+        return $this->getParam('testDataPath') . '/' . $path;
+    }
+
+    private function isShellEnabled(): bool
+    {
+        if (!function_exists('exec') || !is_callable('shell_exec')) {
+            return false;
+        }
+
+        $result = shell_exec("echo test");
+
+        if (empty($result)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function login(): void
+    {
+        $this->password ??= $this->defaultUserPassword;
+
+        $authenticationData = AuthenticationData::create()
+            ->withUsername($this->userName)
+            ->withPassword($this->password)
+            ->withMethod($this->authenticationMethod);
+
+        $auth = $this->application
+            ->getInjectableFactory()
+            ->createWith(Authentication::class, ['allowAnyAccess' => false]);
+
+        /** @var Psr7Request $requestWrapped */
+        $requestWrapped = (new RequestFactory())->createRequest('POST', '');
+
+        $request = $this->request ?? new RequestWrapper($requestWrapped);
+
+        $response = new ResponseWrapper(new Response());
+
+        try {
+            $auth->login($authenticationData, $request, $response);
+        } catch (ServiceUnavailable|Forbidden $e) {
+            throw new RuntimeException(previous: $e);
+        }
+    }
+
+    /**
+     * @return array<string, object>
+     */
+    private function prepareServices(bool $reuse): array
+    {
+        $services = [];
+
+        if ($reuse && $this->application) {
+            $this->application
+                ->getContainer()
+                ->getByClass(EntityManager::class)
+                ->getMetadata()
+                ->updateData();
+
+            $serviceList = [
+                'entityManager',
+                'ormMetadataData',
+                'ormDefs',
+                'metadata',
+            ];
+
+            foreach ($serviceList as $service) {
+                $instance = $this->application->getContainer()->get($service);
+
+                $services[$service] = $instance;
+            }
+        }
+
+        return $services;
+    }
+}

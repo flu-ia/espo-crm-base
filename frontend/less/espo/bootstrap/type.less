@@ -1,0 +1,180 @@
+// Typography
+
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-weight: @headings-font-weight;
+  line-height: @headings-line-height;
+  color: @headings-color;
+
+  small,
+  .small {
+    font-weight: normal;
+    line-height: 1;
+    color: @headings-small-color;
+  }
+}
+
+h1, .h1,
+h2, .h2,
+h3, .h3 {
+  margin-top: var(--line-height-computed);
+  margin-bottom: calc(var(--line-height-computed) / 2);
+
+  small,
+  .small {
+    font-size: 65%;
+  }
+}
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+  margin-top: calc(var(--line-height-computed) / 2);
+  margin-bottom: calc(var(--line-height-computed) / 2);
+
+  small,
+  .small {
+    font-size: 75%;
+  }
+}
+
+
+p {
+  margin: 0 0 var(--line-height-computed-half);
+}
+
+mark,
+.mark {
+    background-color: @state-warning-bg;
+    padding: .2em;
+}
+
+.text-left           { text-align: left; }
+.text-right          { text-align: right; }
+.text-center         { text-align: center; }
+.text-justify        { text-align: justify; }
+.text-nowrap         { white-space: nowrap; }
+
+.text-lowercase      { text-transform: lowercase; }
+.text-uppercase      { text-transform: uppercase; }
+.text-capitalize     { text-transform: capitalize; }
+
+.text-muted {
+    color: @text-muted;
+}
+
+
+.page-header {
+    padding-bottom: calc(var(--line-height-computed-half) - var(--1px));
+    margin: calc(var(--line-height-computed) * 2) 0 var(--line-height-computed);
+    border-bottom: var(--1px) solid @page-header-border-color;
+}
+
+
+ul,
+ol {
+    margin-top: 0;
+    margin-bottom: var(--line-height-computed-half);
+
+    ul,
+    ol {
+        margin-bottom: 0;
+    }
+}
+
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}
+
+.list-inline {
+  .list-unstyled();
+  margin-left: var(--minus-5px);
+
+  > li {
+    display: inline-block;
+    padding-left: var(--5px);
+    padding-right: var(--5px);
+  }
+}
+
+// Description Lists
+dl {
+  margin-top: 0; // Remove browser default
+  margin-bottom: var(--line-height-computed);
+}
+
+dt,
+dd {
+  line-height: var(--line-height-base);
+}
+dt {
+  font-weight: bold;
+}
+dd {
+  margin-left: 0; // Undo browser default
+}
+
+// Abbreviations and acronyms
+abbr[title],
+abbr[data-original-title] {
+  cursor: help;
+  border-bottom: var(--1px) dotted @abbr-border-color;
+}
+
+.initialism {
+    font-size: 90%;
+    .text-uppercase();
+}
+
+// Blockquotes
+blockquote {
+  padding: var(--line-height-computed-half) var(--line-height-computed);
+  margin: 0 0 var(--line-height-computed);
+  font-size: calc(var(--font-size-base) * 1.25);
+  border-left: var(--5px) solid @blockquote-border-color;
+
+  p,
+  ul,
+  ol {
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  footer {
+    display: block;
+    font-size: 80%; // back to default font-size
+    line-height: var(--line-height-base);
+    color: @blockquote-small-color;
+
+    &:before {
+      content: '\2014 \00A0'; // em dash, nbsp
+    }
+  }
+}
+
+.blockquote-reverse {
+  padding-right: var(--15px);
+  padding-left: 0;
+  border-right: var(--5px) solid @blockquote-border-color;
+  border-left: 0;
+  text-align: right;
+
+  // Account for citation
+  footer,
+  small,
+  .small {
+    &:before { content: ''; }
+    &:after {
+      content: '\00A0 \2014'; // nbsp, em dash
+    }
+  }
+}
+
+// Addresses
+address {
+  margin-bottom: var(--line-height-computed);
+  font-style: normal;
+  line-height: var(--line-height-base);
+}

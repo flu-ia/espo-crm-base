@@ -1,0 +1,51 @@
+.fas,
+.far,
+.fa {
+    font-size: var(--icon-size-base);
+    line-height: var(--icon-line-height-base);
+}
+
+.btn {
+    .fas,
+    .far {
+        line-height: var(--line-height-computed);
+
+        &.fa-sm {
+            line-height: var(--icon-line-height-small);
+        }
+    }
+}
+
+.fas.fa-sm,
+.far.fa-sm,
+.btn-sm .fas,
+.btn-sm .far,
+.small .far,
+.small .fas,
+.fas.small,
+.far.small {
+    font-size: var(--icon-size-small);
+    line-height: var(--icon-line-height-small);
+}
+
+.btn:not(.btn-sm),
+ul.nav.tabs > li > a {
+    > .fas.fa-ellipsis-h {
+        vertical-align: middle;
+    }
+}
+
+.btn-sm {
+    > .fa-ellipsis-h,
+    > .fa-plus {
+        font-size: var(--14px);
+    }
+}
+
+.icon-is-replied {
+    transform: scaleX(-1);
+
+    &::before {
+        content: "\f064";
+    }
+}

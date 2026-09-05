@@ -1,0 +1,27 @@
+[
+    {
+        "rows": [
+            [{"name": "name"}, {"name": "isActive"}],
+            [{"name": "clientId"}, {"name": "clientSecret"}],
+            [{"name": "authorizationRedirectUri"}, false]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "authorizationEndpoint"}, {"name": "tokenEndpoint"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "scopes"}],
+            [{"name": "scopeSeparator"}, false],
+            [{"name": "authorizationParams"}, {"name": "authorizationPrompt"}],
+            [{"name": "authorizationPkce"}, false]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "description"}]
+        ]
+    }
+]

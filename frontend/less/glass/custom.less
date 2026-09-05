@@ -1,0 +1,280 @@
+@backdrop-filter: blur(2px);
+@backdrop-filter-2: blur(4px);
+
+
+:root {
+    --body-bg-2: @body-bg-2-value;
+}
+
+body[data-navbar="side"].minimized.side-menu-opened {
+    #navbar > .navbar {
+        border-right: var(--1px) solid var(--panel-default-border);
+        backdrop-filter: @backdrop-filter-2;
+
+        .navbar-body {
+            background-color: var(--navbar-inverse-bg);
+        }
+    }
+
+    > .side-menu-backdrop {
+        margin-left: 0;
+    }
+}
+
+body[data-navbar="top"] {
+    #navbar > .navbar {
+        @media screen and (min-width: @screen-sm-min) {
+            backdrop-filter: @backdrop-filter-2;
+        }
+    }
+}
+
+.alert {
+    backdrop-filter: @backdrop-filter;
+}
+
+body {
+    background-size: 100% 20000px;
+    background: var(--body-bg) repeating-linear-gradient(
+        354deg,
+        var(--body-bg-2) 0px,
+        var(--body-bg) 2000px,
+        var(--body-bg-2) 4000px
+    ) top;
+
+    .list-container-panel {
+        > .list {
+            .table,
+            .table tr,
+            .table tr td,
+            .list-group-item {
+                background-color: transparent;
+            }
+        }
+    }
+
+    .panel {
+        &.panel-default > .panel-heading {
+            background-color: transparent;
+        }
+
+        &.headered {
+            background: var(--panel-bg);
+        }
+
+        .list-container > .list {
+            background-color: transparent;
+            .table,
+            .table tr,
+            .table tr:not(.active) td,
+            .list-group-item {
+                background-color: transparent;
+            }
+
+            .list-group-item.active {
+                background-color: var(--default-heading-bg-color);
+            }
+        }
+
+        &.panel-danger {
+            background-color: var(--panel-danger-bg);
+            > .panel-heading {
+                background-color: transparent;
+            }
+        }
+        &.panel-warning {
+            background-color: var(--panel-warning-bg);
+            > .panel-heading {
+                background-color: transparent;
+            }
+        }
+        &.panel-success {
+            background-color: var(--panel-success-bg);
+            > .panel-heading {
+                background-color: transparent;
+            }
+        }
+        &.panel-info {
+            background-color: var(--panel-info-bg);
+            > .panel-heading {
+                background-color: transparent;
+            }
+        }
+
+        .panel-body .field > .link-container .list-group-item {
+            background-color: transparent;
+        }
+    }
+
+    #navbar {
+        .navbar-right {
+            @media screen and (min-width: @screen-sm-min) {
+                backdrop-filter: @backdrop-filter !important;
+            }
+        }
+    }
+
+    .stick-sub,
+    .sticked-bar{
+        backdrop-filter: @backdrop-filter !important;
+        border-bottom: var(--1px) solid var(--panel-default-border);
+    }
+
+    .list {
+        > .table {
+            background-color: transparent;
+        }
+    }
+
+    #notifications-panel,
+    #global-search-panel,
+    #last-viewed-panel {
+        > .panel {
+            backdrop-filter: @backdrop-filter;
+            > .panel-heading {
+                background-color: transparent;
+            }
+            > .panel-body {
+                background-color: transparent;
+                .list,
+                ul > li.list-group-item {
+                    background-color: transparent;
+                }
+            }
+            background-color: var(--dropdown-bg);
+        }
+    }
+
+    .alert {
+        border-color: var(--panel-default-border) !important;
+        border-top: 0;
+    }
+
+    .modal-dialog > .modal-content {
+        backdrop-filter: @backdrop-filter;
+    }
+}
+
+.field .list-group {
+    background-color: transparent;
+}
+
+.complex-text-container.cut > .complex-text::before {
+    height: var(--20px);
+    background: none;
+    backdrop-filter: blur(1px);
+}
+
+.page-header {
+    .page-header-column-1 {
+        &.no-break-words {
+            .header-breadcrumbs.overlapped {
+                &:after {
+                    background: none;
+                    backdrop-filter: blur(1px);
+                }
+            }
+        }
+    }
+}
+
+select.form-control > option {
+    background-color: var(--dropdown-bg);
+}
+
+#login.panel > .panel-heading {
+    background-color: transparent;
+}
+
+.ui-timepicker-wrapper {
+    scrollbar-color: var(--input-bg) var(--scroll-bg);
+
+    &::-webkit-scrollbar-track {
+        background: var(--input-bg);
+    }
+}
+
+.popup-notification {
+    border-width: var(--1px);
+    backdrop-filter: @backdrop-filter;
+}
+
+.popup-notification-danger {
+    background-color: var(--brand-danger);
+    border-color: var(--panel-default-border);
+
+    h4 {
+        color: var(--text-color);
+    }
+}
+
+.popup-notification-warning {
+    background-color: var(--brand-warning);
+    border-color: var(--panel-default-border);
+
+    h4 {
+        color: var(--text-color);
+    }
+}
+
+.popup-notification-primary {
+    background-color: var(--brand-primary);
+    border-color: var(--panel-default-border);
+
+    h4 {
+        color: var(--text-color);
+    }
+}
+
+.popup-notification-success {
+    background-color: var(--brand-success);
+    border-color: var(--panel-default-border);
+
+    h4 {
+        color: var(--text-color);
+    }
+}
+
+.popup-notification-info {
+    background-color: var(--brand-info);
+    border-color: var(--panel-default-border);
+
+    h4 {
+        color: var(--text-color);
+    }
+}
+
+.panel .panel.note-editor {
+    background-color: transparent;
+
+    &.fullscreen {
+        background-color: var(--body-bg);
+    }
+}
+
+.dashlet-body {
+    table.table,
+    .list-container > .list,
+    .calendar-container > .calendar,
+    .calendar-container > .timeline {
+        background-color: transparent;
+    }
+}
+
+.list-group-side li.selected {
+    a {
+        &.side-link,
+        &:hover.side-link,
+        &:active.side-link,
+        &:visited.side-link,
+        &:focus.side-link {
+            color: var(--state-danger-text);
+            font-weight: 600;
+        }
+    }
+}
+
+.list-kanban .kanban-head-container.sticked {
+    background-color: unset;
+    backdrop-filter: @backdrop-filter;
+}

@@ -1,0 +1,97 @@
+#popup-notifications-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+    // Some space to fix the scrollbar gutter issue https://github.com/w3c/csswg-drafts/issues/9904.
+    right: var(--12px);
+    bottom: var(--24px);
+    position: fixed;
+    height: auto;
+    z-index: 1051;
+    float: right;
+}
+
+.popup-notification {
+    width: var(--400px);
+    padding: var(--panel-padding);
+    background-color: @panel-bg;
+    border: var(--2px) solid @main-gray;
+    margin-top: var(--10px);
+    margin-right: var(--5px);
+    border-radius: var(--panel-border-radius);
+
+    &:last-child {
+        margin-bottom: var(--5px);
+    }
+
+    .cell {
+        margin-bottom: var(--5px);
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    h4 {
+        margin-top: 0;
+    }
+
+    a.close {
+        margin-top: var(--minus-8px);
+        margin-right: var(--minus-3px);
+    }
+
+    a[data-action="collapse"] {
+        margin-top: var(--minus-6px);
+        margin-right: var(--12px);
+    }
+}
+
+.popup-notification-default {
+    border-color: @gray-light;
+    h4 {
+        color: @gray-light;
+    }
+}
+
+.popup-notification-danger {
+    border-color: @brand-danger;
+    h4 {
+        color: @brand-danger;
+    }
+}
+
+.popup-notification-warning {
+    border-color: @brand-warning;
+    h4 {
+        color: @brand-warning;
+    }
+}
+
+.popup-notification-primary {
+    border-color: @brand-primary;
+    h4 {
+        color: @brand-primary;
+    }
+}
+
+.popup-notification-success {
+    border-color: @brand-success;
+    h4 {
+        color: @brand-success;
+    }
+}
+
+.popup-notification-info {
+    border-color: @brand-info;
+    h4 {
+        color: @brand-info;
+    }
+}
+
+@media screen and (max-width: @screen-xs-max) {
+    #popup-notifications-container {
+        width: 100%;
+    }
+    .popup-notification {
+        width: auto;
+    }
+}

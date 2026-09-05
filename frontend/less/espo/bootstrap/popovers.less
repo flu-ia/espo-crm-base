@@ -1,0 +1,113 @@
+// Popovers
+
+.popover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: @zindex-popover;
+  display: none;
+  padding: var(--1px);
+  // Our parent element can be arbitrary since popovers are by default inserted as a sibling of their target element.
+  // So reset our font and text properties to avoid inheriting weird values.
+  .reset-text();
+  font-size: var(--font-size-base);
+
+  background-color: var(--popover-bg);
+  background-clip: padding-box;
+
+  &.top     { margin-top: var(--popover-arrow-width-negative); }
+  &.right   { margin-left: var(--popover-arrow-width); }
+  &.bottom  { margin-top: var(--popover-arrow-width); }
+  &.left    { margin-left: var(--popover-arrow-width-negative); }
+
+    transition: none;
+}
+
+.popover-title {
+  margin: 0;
+  padding: var(--9px) var(--14px);
+  font-size: var(--font-size-base);
+}
+
+.popover-content {
+  padding: var(--9px) var(--14px);
+}
+
+.popover > .arrow {
+  &,
+  &:after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+  }
+}
+.popover > .arrow {
+  border-width: var(--popover-arrow-outer-width);
+}
+.popover > .arrow:after {
+  border-width: var(--popover-arrow-width);
+  content: "";
+}
+
+.popover {
+  &.top > .arrow {
+    left: 50%;
+    margin-left: var(--popover-arrow-outer-width-negative);
+    border-bottom-width: 0;
+    border-top-color: var(--dropdown-border);
+    bottom: var(--popover-arrow-outer-width-negative);
+    &:after {
+      content: " ";
+      bottom: var(--1px);
+      margin-left: var(--popover-arrow-width-negative);
+      border-bottom-width: 0;
+      border-top-color: var(--dropdown-bg);
+    }
+  }
+  &.right > .arrow {
+    top: 50%;
+    left: var(--popover-arrow-outer-width-negative);
+    margin-top: var(--popover-arrow-outer-width-negative);
+    border-left-width: 0;
+    border-right-color: var(--dropdown-border);
+    &:after {
+      content: " ";
+      left: var(--1px);
+      bottom: var(--popover-arrow-width-negative);
+      border-left-width: 0;
+      border-right-color: var(--dropdown-bg);
+    }
+  }
+  &.bottom > .arrow {
+    left: 50%;
+    margin-left: var(--popover-arrow-outer-width-negative);
+    border-top-width: 0;
+    border-bottom-color: var(--dropdown-border);
+    top: var(--popover-arrow-outer-width-negative);
+    &:after {
+      content: " ";
+      top: var(--1px);
+      margin-left: var(--popover-arrow-width-negative);
+      border-top-width: 0;
+      border-bottom-color: var(--dropdown-bg);
+    }
+  }
+
+  &.left > .arrow {
+    top: 50%;
+    right: var(--popover-arrow-outer-width-negative);
+    margin-top: var(--popover-arrow-outer-width-negative);
+    border-right-width: 0;
+    border-left-color: var(--dropdown-border);
+    &:after {
+      content: " ";
+      right: var(--1px);
+      border-right-width: 0;
+      border-left-color: var(--dropdown-bg);
+      bottom: var(--popover-arrow-width-negative);
+    }
+  }
+}
