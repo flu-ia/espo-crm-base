@@ -49,14 +49,17 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
-      start_period: 60s
-      interval: 60s
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1/"]
+      start_period: 15s
+      interval: 15s
       timeout: 10s
       retries: 3
 
   # Job runner (cron). Needed for scheduled jobs / webhooks. Optional for UI tests.
   cron:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: fluia/espocrm:slim
     container_name: fluia-espocrm-cron
     volumes:
@@ -67,6 +70,8 @@ services:
     depends_on:
       app:
         condition: service_healthy
+    healthcheck:
+      disable: true
     entrypoint: ["sh", "-c", "while true; do su www-data -s /bin/sh -c 'php cron.php' || true; sleep 60; done"]
 
 volumes:
