@@ -14,6 +14,7 @@
 /npm-debug.log
 /test.php
 /main.html
+.env
 
 /tests/unit/testData/cache/*
 !/tests/unit/testData/cache/.data
