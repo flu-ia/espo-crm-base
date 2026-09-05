@@ -23,7 +23,8 @@ RUN composer install \
         --no-dev \
         --prefer-dist \
         --no-progress \
-        --no-interaction
+        --no-interaction \
+        --ignore-platform-reqs
 
 
 # ---------------------------------------------------------------- Stage 2: frontend build
@@ -58,8 +59,8 @@ WORKDIR /var/www/html
 # For PostgreSQL add: pdo_pgsql (one-line change below).
 COPY --from=ext-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-RUN apk add --no-cache nginx supervisor \
-    && install-php-extensions pdo_mysql gd zip bcmath exif opcache pcntl fileinfo \
+RUN apk add --no-cache nginx supervisor curl \
+    && install-php-extensions pdo_mysql gd zip bcmath exif opcache pcntl fileinfo sockets \
     # www-data must own only the writable paths (see Permission.php writableMap)
     && mkdir -p data/logs data/cache client/custom custom/Espo/Custom custom/Espo/Modules
 
@@ -97,7 +98,7 @@ RUN chmod +x /usr/local/bin/entrypoint.sh \
 
 EXPOSE 80
 
-HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \
-    CMD wget -q -O /dev/null http://127.0.0.1/ || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+    CMD curl -fsS -o /dev/null http://127.0.0.1/ || exit 1
 
 ENTRYPOINT ["entrypoint.sh"]
