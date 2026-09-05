@@ -217,12 +217,6 @@
                 "description": "groupEmailFolders"
             },
             {
-                "url": "#Admin/emailTemplates",
-                "label": "Email Templates",
-                "iconClass": "fas fa-envelope-square",
-                "description": "emailTemplates"
-            },
-            {
                 "url": "#Admin/sms",
                 "label": "SMS",
                 "iconClass": "fas fa-paper-plane",
@@ -260,13 +254,6 @@
     "setup": {
         "label": "Setup",
         "itemList": [
-            {
-                "url": "#Admin/workingTimeCalendar",
-                "label": "Working Time Calendars",
-                "iconClass": "far fa-calendar-alt",
-                "description": "workingTimeCalendars",
-                "tabQuickSearch": true
-            },
             {
                 "url": "#Admin/layoutSets",
                 "label": "Layout Sets",

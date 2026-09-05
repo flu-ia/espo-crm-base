@@ -13,6 +13,7 @@
     ],
     "module": "Crm",
     "customizable": true,
+    "disabled": true,
     "stream": true,
     "importable": true,
     "notifications": true,

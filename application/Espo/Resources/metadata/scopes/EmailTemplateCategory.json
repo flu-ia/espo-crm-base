@@ -5,6 +5,7 @@
     "acl": true,
     "aclLevelList": ["all", "team", "no"],
     "aclFieldLevelDisabled": true,
+    "disabled": true,
     "customizable": false,
     "importable": false,
     "type": "CategoryTree",

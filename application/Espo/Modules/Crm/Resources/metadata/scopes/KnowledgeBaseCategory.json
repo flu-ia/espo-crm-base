@@ -15,6 +15,7 @@
     "aclPortal": true,
     "aclPortalActionList": ["read"],
     "module": "Crm",
+    "disabled": true,
     "customizable": false,
     "importable": false,
     "type": "CategoryTree",

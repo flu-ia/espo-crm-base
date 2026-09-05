@@ -4,6 +4,7 @@
     "tab": true,
     "acl": true,
     "aclFieldLevelDisabled": true,
+    "disabled": true,
     "customizable": false,
     "importable": true,
     "lastViewed": true,

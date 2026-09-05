@@ -6,5 +6,6 @@
     "notifications": false,
     "object": false,
     "customizable": false,
+    "disabled": true,
     "module": "Crm"
 }

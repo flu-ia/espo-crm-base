@@ -4,5 +4,6 @@
     "aclFieldLevelDisabled": true,
     "tab": true,
     "layouts": false,
+    "disabled": true,
     "customizable": false
 }

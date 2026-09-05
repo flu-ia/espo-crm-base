@@ -5,6 +5,7 @@
     "acl": true,
     "module": "Crm",
     "customizable": true,
+    "disabled": true,
     "stream": false,
     "importable": false,
     "object": true,

@@ -8,6 +8,7 @@
     "aclPortalActionList": ["read"],
     "module": "Crm",
     "customizable": true,
+    "disabled": true,
     "importable": true,
     "notifications": false,
     "object": true
