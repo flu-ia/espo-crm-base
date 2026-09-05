@@ -29,20 +29,22 @@ RUN composer install \
 
 # ---------------------------------------------------------------- Stage 2: frontend build
 # client/lib/* and client/css/* are gitignored build artifacts produced by grunt.
-FROM node:20-alpine AS frontend
+FROM node:22-alpine AS frontend
 
 WORKDIR /src
 
-COPY package.json package-lock.json Gruntfile.js jsconfig.json ./
+RUN corepack enable && corepack prepare pnpm@11.24.0 --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc Gruntfile.js jsconfig.json ./
 COPY js/ ./js/
 COPY frontend/ ./frontend/
 COPY client/ ./client/
 COPY html/ ./html/
 COPY application/ ./application/
 
-RUN npm ci --no-audit --no-fund \
-    && npx grunt internal \
-    && npm cache clean --force
+RUN pnpm install --frozen-lockfile \
+    && pnpm exec grunt internal \
+    && pnpm store prune
 
 
 # ---------------------------------------------------------------- Stage 3: runtime
@@ -73,7 +75,7 @@ COPY --from=frontend /src/client ./client
 RUN set -eux; \
     # Drop build-only / dev-only weight from the final image.
     rm -rf tests dev frontend .github .idea .vscode \
-        node_modules Gruntfile.js package.json package-lock.json \
+        node_modules Gruntfile.js package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc \
         jsconfig.json tsconfig.json po.js lang.js diff.js \
         data/logs data/cache data/upload data/tmp; \
     mkdir -p data/logs data/cache; \

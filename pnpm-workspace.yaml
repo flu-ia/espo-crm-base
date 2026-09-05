@@ -1,0 +1,9 @@
+allowBuilds:
+  autobahn-espo@https://codeload.github.com/yurikuzn/autobahn-espo/tar.gz/82e1d942b34d8226b25359eb076968e6211b79c2: true
+  bullbone@https://codeload.github.com/espocrm/bullbone/tar.gz/affc831d43b05ea995942c809a3f892305948db3: true
+  chromedriver: true
+  espo-frontend-build-tools@https://codeload.github.com/espocrm/frontend-build-tools/tar.gz/c790342c8f4d800c135fc4c35635c10b08df0086: true
+  espo-funnel-chart@https://codeload.github.com/yurikuzn/espo-funnel-chart/tar.gz/3dd9c7685cb9c1e4d9afed3ba962d2b61c28678d: true
+  gridstack@https://codeload.github.com/yurikuzn/gridstack.js/tar.gz/f833a4d4bde2eff9efc66c5265714d3b6f514097: true
+  jquery-ui-espo@https://codeload.github.com/yurikuzn/jquery-ui-espo/tar.gz/9529ed989d7c7da0f5cc49d7d7ab91a8e04850e1: true
+  moment-timezone-data-build@https://codeload.github.com/yurikuzn/moment-timezone-data-build/tar.gz/a24ead672ecc31e9354c71beea1e7e4700f9b192: true
