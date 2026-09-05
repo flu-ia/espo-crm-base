@@ -885,7 +885,8 @@
   "navbarTabs": {
     "Business": "Negocios",
     "Support": "Soporte",
-    "Activities": "Actividades"
+    "Activities": "Actividades",
+    "Tools": "Herramientas"
   },
   "wysiwygLabels": {
     "cell": "Celda",

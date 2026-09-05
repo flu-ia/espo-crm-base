@@ -1028,7 +1028,8 @@
         "Marketing": "Marketing",
         "Support": "Support",
         "CRM": "CRM",
-        "Activities": "Activities"
+        "Activities": "Activities",
+        "Tools": "Tools"
     },
     "wysiwygLabels": {
         "cell": "Cell",

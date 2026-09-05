@@ -739,5 +739,11 @@
   "listViewModes": {
     "list": "Lista",
     "kanban": "Tarjetas"
+  },
+  "navbarTabs": {
+    "Business": "Negocios",
+    "Support": "Soporte",
+    "Activities": "Actividades",
+    "Tools": "Herramientas"
   }
 }

@@ -114,26 +114,6 @@ return [
         'Calendar',
         (object) [
             'type' => 'divider',
-            'id' => '655187',
-            'text' => '$Support'
-        ],
-        'Case',
-        'KnowledgeBaseArticle',
-        (object) [
-            'type' => 'divider',
-            'text' => NULL,
-            'id' => '137994'
-        ],
-        '_delimiter_',
-        (object) [
-            'type' => 'divider',
-            'text' => '$Marketing',
-            'id' => '463280'
-        ],
-        'Campaign',
-        'TargetList',
-        (object) [
-            'type' => 'divider',
             'text' => '$Business',
             'id' => '518202'
         ],
@@ -145,13 +125,11 @@ return [
         ],
         'User',
         'Team',
-        'WorkingTimeCalendar',
         (object) [
             'type' => 'divider',
-            'text' => NULL,
+            'text' => '$Tools',
             'id' => '898671'
         ],
-        'EmailTemplate',
         'Template',
         'Import',
     ],
@@ -160,8 +138,7 @@ return [
         "Contact",
         "Lead",
         "Opportunity",
-        "Task",
-        "Case"
+        "Task"
     ],
     'exportDisabled' => false,
     'adminNotifications' => true,
@@ -169,10 +146,10 @@ return [
     'adminNotificationsCronIsNotConfigured' => true,
     'adminNotificationsNewExtensionVersion' => true,
     'assignmentEmailNotifications' => false,
-    'assignmentEmailNotificationsEntityList' => ['Lead', 'Opportunity', 'Task', 'Case'],
+    'assignmentEmailNotificationsEntityList' => ['Lead', 'Opportunity', 'Task'],
     'assignmentNotificationsEntityList' => [],
     "portalStreamEmailNotifications" => true,
-    'streamEmailNotificationsEntityList' => ['Case'],
+    'streamEmailNotificationsEntityList' => [],
     'streamEmailNotificationsTypeList' => ['Post', 'Status', 'EmailReceived'],
     'emailNotificationsDelay' => 30,
     'emailMessageMaxSize' => 10,
