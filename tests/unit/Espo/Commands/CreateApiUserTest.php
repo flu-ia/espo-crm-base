@@ -40,6 +40,7 @@ use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Repository\RDBRelation;
 use Espo\ORM\Repository\RDBRepository;
+use Espo\ORM\Repository\RDBSelectBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -112,8 +113,9 @@ class CreateApiUserTest extends TestCase
         $user->method('isApi')->willReturn(false);
 
         $userRepository = $this->createMock(RDBRepository::class);
-        $userRepository->method('where')->willReturnSelf();
-        $userRepository->method('findOne')->willReturn($user);
+        $userSelectBuilder = $this->createMock(RDBSelectBuilder::class);
+        $userSelectBuilder->method('findOne')->willReturn($user);
+        $userRepository->method('where')->willReturn($userSelectBuilder);
 
         $this->entityManager->method('getRDBRepositoryByClass')
             ->with(User::class)
@@ -148,14 +150,16 @@ class CreateApiUserTest extends TestCase
         $newRole->method('getId')->willReturn('role-uuid-123');
 
         $userRepository = $this->createMock(RDBRepository::class);
-        $userRepository->method('where')->willReturnSelf();
-        $userRepository->method('findOne')->willReturn(null);
+        $userSelectBuilder = $this->createMock(RDBSelectBuilder::class);
+        $userSelectBuilder->method('findOne')->willReturn(null);
+        $userRepository->method('where')->willReturn($userSelectBuilder);
         $userRepository->method('getNew')->willReturn($newUser);
         $userRepository->expects($this->once())->method('save')->with($newUser);
 
         $roleRepository = $this->createMock(RDBRepository::class);
-        $roleRepository->method('where')->willReturnSelf();
-        $roleRepository->method('findOne')->willReturn(null);
+        $roleSelectBuilder = $this->createMock(RDBSelectBuilder::class);
+        $roleSelectBuilder->method('findOne')->willReturn(null);
+        $roleRepository->method('where')->willReturn($roleSelectBuilder);
         $roleRepository->method('getNew')->willReturn($newRole);
         $roleRepository->expects($this->once())->method('save')->with($newRole);
 
@@ -214,13 +218,15 @@ class CreateApiUserTest extends TestCase
         $existingRole->method('getId')->willReturn('role-uuid-123');
 
         $userRepository = $this->createMock(RDBRepository::class);
-        $userRepository->method('where')->willReturnSelf();
-        $userRepository->method('findOne')->willReturn($existingUser);
+        $userSelectBuilder = $this->createMock(RDBSelectBuilder::class);
+        $userSelectBuilder->method('findOne')->willReturn($existingUser);
+        $userRepository->method('where')->willReturn($userSelectBuilder);
         $userRepository->expects($this->never())->method('save');
 
         $roleRepository = $this->createMock(RDBRepository::class);
-        $roleRepository->method('where')->willReturnSelf();
-        $roleRepository->method('findOne')->willReturn($existingRole);
+        $roleSelectBuilder = $this->createMock(RDBSelectBuilder::class);
+        $roleSelectBuilder->method('findOne')->willReturn($existingRole);
+        $roleRepository->method('where')->willReturn($roleSelectBuilder);
         $roleRepository->expects($this->once())->method('save')->with($existingRole);
 
         $this->entityManager->method('getRDBRepositoryByClass')
